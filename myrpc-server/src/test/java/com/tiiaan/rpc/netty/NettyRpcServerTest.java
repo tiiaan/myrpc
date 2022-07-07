@@ -1,4 +1,4 @@
-package com.tiiaan.rpc.socket;
+package com.tiiaan.rpc.netty;
 
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
@@ -8,23 +8,25 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class SocketRpcServerTest {
+public class NettyRpcServerTest {
 
     @Test
     public void start() {
+
         HelloService helloService = new HelloServiceImpl();
         ServiceProvider serviceProvider = new ServiceProviderImpl();
         serviceProvider.addService(helloService);
-        SocketRpcServer socketRpcServer = new SocketRpcServer(9000);
-        socketRpcServer.start();
+        NettyRpcServer nettyRpcServer = new NettyRpcServer(9000);
+        nettyRpcServer.start();
+
     }
 
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
         ServiceProvider serviceProvider = new ServiceProviderImpl();
         serviceProvider.addService(helloService);
-        SocketRpcServer socketRpcServer = new SocketRpcServer(9000);
-        socketRpcServer.start();
+        NettyRpcServer nettyRpcServer = new NettyRpcServer(9000);
+        nettyRpcServer.start();
     }
 
 }

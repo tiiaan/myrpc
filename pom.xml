@@ -16,6 +16,8 @@
         <module>myrpc-server</module>
         <module>myrpc-client</module>
         <module>myrpc-core</module>
+        <module>myrpc-serializer</module>
+        <module>myrpc-codec</module>
     </modules>
 
     <properties>

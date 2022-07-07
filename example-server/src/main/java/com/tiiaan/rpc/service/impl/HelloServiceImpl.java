@@ -15,7 +15,7 @@ public class HelloServiceImpl implements HelloService {
 
     @Override
     public MyMessage hello(MyMessage myMessage) {
-        log.info("HelloServiceImpl.hello(): get myMessage, id={}, message={}", myMessage.getId(), myMessage.getMessage());
+        log.info("get {}", myMessage);
         return myMessage;
     }
 

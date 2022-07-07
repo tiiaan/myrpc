@@ -15,17 +15,21 @@ public enum MyRpcError {
 
     UNKNOWN_ERROR("未知错误"),
     CONNECTION_FAILURE("连接服务端失败"),
+    SERVER_START_FAILURE("服务启动失败"),
     SERVICE_INVOCATION_FAILURE("服务调用失败"),
+    SERVER_NOT_FOUND("找不到对应的服务器"),
     SERVICE_NOT_FOUND("找不到对应的服务"),
     SERVICE_NOT_IMPLEMENT_ANY_INTERFACE("注册的服务未实现接口"),
     UNKNOWN_PROTOCOL("不识别的协议包"),
     UNKNOWN_SERIALIZER("不识别的(反)序列化器"),
     UNKNOWN_PACKAGE_TYPE("不识别的数据包类型"),
     SERIALIZER_NOT_FOUND("找不到序列化器"),
+    SERIALIZE_FAILURE("序列化失败"),
     RESPONSE_NOT_MATCH("响应与请求号不匹配"),
     SERVICE_REGISTRY_CONNECTION_FAILURE("连接注册中心失败"),
     SERVICE_REGISTER_FAILURE("服务注册失败"),
-    IO_ERROR("IO操作异常");
+    IO_ERROR("IO操作异常"),
+    REQUEST_FAILURE("请求发送失败");
 
     private final String message;
 

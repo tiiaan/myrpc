@@ -3,7 +3,6 @@ package com.tiiaan.rpc.proxy;
 import com.tiiaan.rpc.MyRpcClient;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.socket.SocketRpcClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -19,16 +18,10 @@ import java.lang.reflect.Proxy;
 @Slf4j
 public class MyRpcClientProxy implements InvocationHandler {
 
-
-    private final String host;
-    private final Integer port;
-
     private MyRpcClient myRpcClient;
 
-    public MyRpcClientProxy(String host, Integer port) {
-        this.host = host;
-        this.port = port;
-        myRpcClient = new SocketRpcClient();
+    public MyRpcClientProxy(MyRpcClient myRpcClient) {
+        this.myRpcClient = myRpcClient;
     }
 
     public <T> T getProxyInstance(Class<T> clazz) {
@@ -45,9 +38,7 @@ public class MyRpcClientProxy implements InvocationHandler {
                 .paramTypes(method.getParameterTypes())
                 .build();
         //2.向服务提供者发送请求
-        log.info("向 {}:{} 发送 RPC 调用请求, interface={}, method={}, params={}",
-                host, port, myRpcRequest.getInterfaceName(), myRpcRequest.getMethodName(), myRpcRequest.getParameters());
-        return ((MyRpcResponse) myRpcClient.sendRequest(myRpcRequest, host, port)).getData();
+        return ((MyRpcResponse) myRpcClient.sendRequest(myRpcRequest)).getData();
     }
 
 }

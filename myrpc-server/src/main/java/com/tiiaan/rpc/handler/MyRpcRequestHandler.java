@@ -23,19 +23,16 @@ import java.lang.reflect.Method;
 @NoArgsConstructor
 public class MyRpcRequestHandler {
 
-    private ServiceProvider serviceProvider;
+    private static final ServiceProvider serviceProvider;
 
-
-    public MyRpcRequestHandler(ServiceProvider serviceProvider) {
-        this.serviceProvider = serviceProvider;
+    static {
+        serviceProvider = new ServiceProviderImpl();
     }
-
 
     public Object handle(MyRpcRequest myRpcRequest) {
         Object service = serviceProvider.getService(myRpcRequest.getInterfaceName());
         return invokeTargetMethod(myRpcRequest, service);
     }
-
 
     private Object invokeTargetMethod(MyRpcRequest myRpcRequest, Object service) {
         Object returnObject = null;
@@ -54,6 +51,5 @@ public class MyRpcRequestHandler {
         }
         return returnObject;
     }
-
 
 }

@@ -10,6 +10,6 @@ import com.tiiaan.rpc.entity.MyRpcRequest;
 
 public interface MyRpcClient {
 
-    Object sendRequest(MyRpcRequest myRpcRequest, String host, Integer port);
+    Object sendRequest(MyRpcRequest myRpcRequest);
 
 }

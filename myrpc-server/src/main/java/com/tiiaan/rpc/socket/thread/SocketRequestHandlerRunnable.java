@@ -1,4 +1,4 @@
-package com.tiiaan.rpc.thread;
+package com.tiiaan.rpc.socket.thread;
 
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
@@ -29,7 +29,6 @@ public class SocketRequestHandlerRunnable implements Runnable {
 
     private Socket socket;
     private MyRpcRequestHandler myRpcRequestHandler;
-
 
     @Override
     public void run() {

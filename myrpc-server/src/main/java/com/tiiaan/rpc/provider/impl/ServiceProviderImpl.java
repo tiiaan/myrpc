@@ -19,15 +19,13 @@ import java.util.concurrent.ConcurrentMap;
 @Slf4j
 public class ServiceProviderImpl implements ServiceProvider {
 
-    private final Map<String, Object> interfaceMap;
-    private final Set<String> registeredService;
+    private static final Map<String, Object> interfaceMap;
+    private static final Set<String> registeredService;
 
-
-    public ServiceProviderImpl() {
+    static {
         interfaceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
     }
-
 
     @Override
     public void addService(Object service) {
