@@ -4,7 +4,6 @@ import com.tiiaan.rpc.entity.MyMessage;
 import com.tiiaan.rpc.service.HelloService;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class MyRpcClientProxyTest {
 

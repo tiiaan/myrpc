@@ -1,9 +1,12 @@
 package com.tiiaan.rpc.socket;
 
+import com.tiiaan.rpc.AbstractRpcServer;
 import com.tiiaan.rpc.MyRpcServer;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.factory.ThreadPoolFactory;
+import com.tiiaan.rpc.handler.MyRpcRequestHandler;
+import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.thread.SocketRequestHandlerRunnable;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,24 +24,29 @@ import java.util.concurrent.ExecutorService;
  */
 
 @Slf4j
-public class SocketRpcServer implements MyRpcServer {
+public class SocketRpcServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
+    private final MyRpcRequestHandler myRpcRequestHandler;
 
-    public SocketRpcServer() {
+
+    public SocketRpcServer(Integer port, ServiceProvider serviceProvider) {
+        this.port = port;
+        this.myRpcRequestHandler = new MyRpcRequestHandler(serviceProvider);
         threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
     }
 
+
     @Override
-    public void start(Object service, Integer port) {
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket();) {
             String host = InetAddress.getLocalHost().getHostAddress();
             serverSocket.bind(new InetSocketAddress(host, port));
-            log.info("服务端 {}:{} 已启动, 暴露服务 {}, 等待客户端连接...", host, port, service.getClass().getCanonicalName());
+            log.info("服务端 {}:{} 已启动, 等待客户端连接...", host, port);
             Socket socket;
             while ((socket = serverSocket.accept()) != null) {
                 log.info("客户端 {}:{} 连接成功", socket.getInetAddress().getHostAddress(), socket.getPort());
-                threadPool.execute(new SocketRequestHandlerRunnable(socket, service));
+                threadPool.execute(new SocketRequestHandlerRunnable(socket, myRpcRequestHandler));
             }
         } catch (IOException e) {
             e.printStackTrace();

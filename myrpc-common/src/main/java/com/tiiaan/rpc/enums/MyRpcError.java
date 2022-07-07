@@ -24,7 +24,8 @@ public enum MyRpcError {
     SERIALIZER_NOT_FOUND("找不到序列化器"),
     RESPONSE_NOT_MATCH("响应与请求号不匹配"),
     SERVICE_REGISTRY_CONNECTION_FAILURE("连接注册中心失败"),
-    SERVICE_REGISTER_FAILURE("服务注册失败");
+    SERVICE_REGISTER_FAILURE("服务注册失败"),
+    IO_ERROR("IO操作异常");
 
     private final String message;
 

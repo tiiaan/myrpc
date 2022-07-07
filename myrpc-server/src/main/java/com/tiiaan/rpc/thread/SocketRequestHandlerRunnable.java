@@ -2,6 +2,9 @@ package com.tiiaan.rpc.thread;
 
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
+import com.tiiaan.rpc.enums.MyRpcError;
+import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +28,8 @@ import java.net.Socket;
 public class SocketRequestHandlerRunnable implements Runnable {
 
     private Socket socket;
-    private Object service;
+    private MyRpcRequestHandler myRpcRequestHandler;
+
 
     @Override
     public void run() {
@@ -33,25 +37,21 @@ public class SocketRequestHandlerRunnable implements Runnable {
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());) {
             //读请求
             MyRpcRequest myRpcRequest = (MyRpcRequest) objectInputStream.readObject();
-            //从请求中获取要调用的的方法
-            Method method = service.getClass().getMethod(myRpcRequest.getMethodName(), myRpcRequest.getParamTypes());
-            //反射执行方法，获得返回值
-            Object returnObject = method.invoke(service, myRpcRequest.getParameters());
+            ////从请求中获取要调用的的方法
+            //Method method = service.getClass().getMethod(myRpcRequest.getMethodName(), myRpcRequest.getParamTypes());
+            ////反射执行方法，获得返回值
+            //Object returnObject = method.invoke(service, myRpcRequest.getParameters());
+
+            Object returnObject = myRpcRequestHandler.handle(myRpcRequest);
+
             //返回值写进响应
             objectOutputStream.writeObject(MyRpcResponse.success(returnObject));
             objectOutputStream.flush();
             log.info("来自客户端 {}:{} 的调用请求处理成功", socket.getInetAddress().getHostAddress(), socket.getPort());
 
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new MyRpcException(MyRpcError.IO_ERROR);
         }
     }
 

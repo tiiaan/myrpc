@@ -8,6 +8,6 @@ package com.tiiaan.rpc;
 
 public interface MyRpcServer {
 
-    void start(Object service, Integer port);
+    void start();
 
 }
