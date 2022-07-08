@@ -47,8 +47,8 @@ public class JsonSerializer implements MyRpcSerializer {
             }
             return obj;
         } catch (IOException e) {
-            log.error("序列化失败", e);
-            throw new MyRpcException(MyRpcError.SERIALIZE_FAILURE);
+            log.error("反序列化失败", e);
+            throw new MyRpcException(MyRpcError.DESERIALIZE_FAILURE);
         }
     }
 

@@ -25,6 +25,7 @@ public enum MyRpcError {
     UNKNOWN_PACKAGE_TYPE("不识别的数据包类型"),
     SERIALIZER_NOT_FOUND("找不到序列化器"),
     SERIALIZE_FAILURE("序列化失败"),
+    DESERIALIZE_FAILURE("反序列化失败"),
     RESPONSE_NOT_MATCH("响应与请求号不匹配"),
     SERVICE_REGISTRY_CONNECTION_FAILURE("连接注册中心失败"),
     SERVICE_REGISTER_FAILURE("服务注册失败"),

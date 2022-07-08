@@ -29,6 +29,7 @@ public class MyRpcClientProxyTest {
     }
 
     public static void main(String[] args) {
+
         //MyRpcClient socketRpcClient = new SocketRpcClient()
         //        .setServerHost("192.168.10.4")
         //        .setServerPort(9000);

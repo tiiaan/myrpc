@@ -7,6 +7,7 @@ import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyServerHandler;
 import com.tiiaan.rpc.json.JsonSerializer;
+import com.tiiaan.rpc.kryo.KryoSerializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -48,7 +49,8 @@ public class NettyRpcServer extends AbstractRpcServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
+                            //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
+                            pipeline.addLast(new MyRpcEncoder(new KryoSerializer()));
                             pipeline.addLast(new MyRpcDecoder());
                             pipeline.addLast(new NettyServerHandler());
                         }

@@ -62,7 +62,12 @@ public class ThreadPoolFactory {
     private static ExecutorService createThreadPool(String threadNamePrefix, Boolean daemon) {
         BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = createThreadFactory(threadNamePrefix, daemon);
-        return new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE_SIZE, KEEP_ALIVE_TIME, TimeUnit.MINUTES, workQueue, threadFactory);
+        return new ThreadPoolExecutor(CORE_POOL_SIZE,
+                MAXIMUM_POOL_SIZE_SIZE,
+                KEEP_ALIVE_TIME,
+                TimeUnit.MINUTES,
+                workQueue,
+                threadFactory);
     }
 
 

@@ -4,10 +4,7 @@ import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +24,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<MyRpcRequest
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, MyRpcRequest msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, MyRpcRequest msg) {
         try {
             log.info("服务端收到调用请求 {}", msg);
             Object returnObject = myRpcRequestHandler.handle(msg);

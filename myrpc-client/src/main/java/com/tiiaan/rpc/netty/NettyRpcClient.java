@@ -1,5 +1,6 @@
 package com.tiiaan.rpc.netty;
 
+import com.sun.xml.internal.rngom.digested.DGroupPattern;
 import com.tiiaan.rpc.AbstractRpcClient;
 import com.tiiaan.rpc.MyRpcDecoder;
 import com.tiiaan.rpc.MyRpcEncoder;
@@ -9,6 +10,7 @@ import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyClientHandler;
 import com.tiiaan.rpc.json.JsonSerializer;
+import com.tiiaan.rpc.kryo.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -27,10 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyRpcClient extends AbstractRpcClient {
 
-    private static final Bootstrap bootstrap;
+    private final Bootstrap bootstrap;
+    private final EventLoopGroup group;
 
-    static {
-        EventLoopGroup group = new NioEventLoopGroup();
+    public NettyRpcClient() {
+        group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
@@ -40,12 +43,12 @@ public class NettyRpcClient extends AbstractRpcClient {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast(new MyRpcDecoder());
-                        pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
+                        //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
+                        pipeline.addLast(new MyRpcEncoder(new KryoSerializer()));
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
     }
-
 
     @Override
     public Object sendRequest(MyRpcRequest myRpcRequest) {
@@ -65,11 +68,17 @@ public class NettyRpcClient extends AbstractRpcClient {
                 AttributeKey<MyRpcResponse> key = AttributeKey.valueOf("rpcResponse");
                 return channel.attr(key).get();
             }
+            return null;
         } catch (InterruptedException e) {
             log.error("请求发送失败", e);
             throw new MyRpcException(MyRpcError.REQUEST_FAILURE);
+        } finally {
+            group.shutdownGracefully();
         }
-        return null;
+    }
+
+    public void close() {
+        group.shutdownGracefully();
     }
 
 }
