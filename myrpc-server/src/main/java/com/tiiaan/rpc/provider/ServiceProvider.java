@@ -11,4 +11,6 @@ public interface ServiceProvider {
     public void addService(Object service);
     public Object getService(String interfaceName);
 
+    public void publishService(Object service, Integer port);
+
 }

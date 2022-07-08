@@ -1,9 +1,7 @@
 package com.tiiaan.rpc.netty;
 
 import com.sun.xml.internal.rngom.digested.DGroupPattern;
-import com.tiiaan.rpc.AbstractRpcClient;
-import com.tiiaan.rpc.MyRpcDecoder;
-import com.tiiaan.rpc.MyRpcEncoder;
+import com.tiiaan.rpc.*;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.enums.MyRpcError;
@@ -11,6 +9,7 @@ import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyClientHandler;
 import com.tiiaan.rpc.json.JsonSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
+import com.tiiaan.rpc.nacos.NacosServiceDiscovery;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -20,6 +19,8 @@ import io.netty.util.AttributeKey;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetSocketAddress;
+
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
  * @version 0.0
@@ -27,12 +28,16 @@ import lombok.extern.slf4j.Slf4j;
  */
 
 @Slf4j
-public class NettyRpcClient extends AbstractRpcClient {
+public class NettyRpcClient implements MyRpcClient {
 
     private final Bootstrap bootstrap;
     private final EventLoopGroup group;
+    private final ServiceDiscovery serviceDiscovery;
+
+
 
     public NettyRpcClient() {
+        serviceDiscovery = new NacosServiceDiscovery();
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -53,13 +58,16 @@ public class NettyRpcClient extends AbstractRpcClient {
     @Override
     public Object sendRequest(MyRpcRequest myRpcRequest) {
         try {
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getInterfaceName());
+            String serverHost = inetSocketAddress.getAddress().getHostAddress();
+            Integer serverPort = inetSocketAddress.getPort();
             ChannelFuture future = bootstrap.connect(serverHost, serverPort).sync();
-            log.info("连接到服务器 {}:{}", serverHost, serverPort);
+            log.info("连接服务提供者 {}:{}", serverHost, serverPort);
             Channel channel = future.channel();
             if(channel != null) {
                 channel.writeAndFlush(myRpcRequest).addListener(future1 -> {
                     if(future1.isSuccess()) {
-                        log.info("发送 RPC 调用请求 {}", myRpcRequest);
+                        log.info("发送调用请求, {}", myRpcRequest);
                     } else {
                         log.error("请求发送失败", future1.cause());
                     }
@@ -73,6 +81,7 @@ public class NettyRpcClient extends AbstractRpcClient {
             log.error("请求发送失败", e);
             throw new MyRpcException(MyRpcError.REQUEST_FAILURE);
         } finally {
+            log.info("Netty 服务正在关闭...");
             group.shutdownGracefully();
         }
     }

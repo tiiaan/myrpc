@@ -10,4 +10,6 @@ public interface MyRpcServer {
 
     void start();
 
+    void register(Object service);
+
 }

@@ -5,6 +5,8 @@ import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.factory.ThreadPoolFactory;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
+import com.tiiaan.rpc.provider.ServiceProvider;
+import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
 import com.tiiaan.rpc.socket.thread.SocketRequestHandlerRunnable;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +28,7 @@ public class SocketRpcServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
     private final MyRpcRequestHandler myRpcRequestHandler;
+    private final ServiceProvider serviceProvider = new ServiceProviderImpl();
 
 
     public SocketRpcServer(Integer port) {
@@ -50,6 +53,11 @@ public class SocketRpcServer extends AbstractRpcServer {
             e.printStackTrace();
             throw new MyRpcException(MyRpcError.CONNECTION_FAILURE);
         }
+    }
+
+    @Override
+    public void register(Object service) {
+        serviceProvider.addService(service);
     }
 
 }

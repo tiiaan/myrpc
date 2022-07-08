@@ -18,9 +18,7 @@ public class MyRpcClientProxyTest {
         //MyRpcClientProxy proxy = new MyRpcClientProxy(socketRpcClient);
 
 
-        MyRpcClient nettyRpcClient = new NettyRpcClient()
-                .setServerHost("192.168.10.4")
-                .setServerPort(9000);
+        MyRpcClient nettyRpcClient = new NettyRpcClient();
         MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient);
 
         HelloService helloService = proxy.getProxyInstance(HelloService.class);
@@ -35,9 +33,7 @@ public class MyRpcClientProxyTest {
         //        .setServerPort(9000);
         //MyRpcClientProxy proxy = new MyRpcClientProxy(socketRpcClient);
 
-        MyRpcClient nettyRpcClient = new NettyRpcClient()
-                .setServerHost("192.168.10.4")
-                .setServerPort(9000);
+        NettyRpcClient nettyRpcClient = new NettyRpcClient();
         MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient);
 
         HelloService helloService = proxy.getProxyInstance(HelloService.class);

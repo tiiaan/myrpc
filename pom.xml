@@ -18,6 +18,7 @@
         <module>myrpc-core</module>
         <module>myrpc-serializer</module>
         <module>myrpc-codec</module>
+        <module>myrpc-registry</module>
     </modules>
 
     <properties>

@@ -1,10 +1,15 @@
 package com.tiiaan.rpc.provider.impl;
 
+import com.tiiaan.rpc.ServiceRegistry;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.nacos.NacosServiceRegistry;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,11 +26,15 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     private static final Map<String, Object> interfaceMap;
     private static final Set<String> registeredService;
+    private static final ServiceRegistry serviceRegistry;
+
 
     static {
         interfaceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
+        serviceRegistry = new NacosServiceRegistry();
     }
+
 
     @Override
     public void addService(Object service) {
@@ -52,6 +61,19 @@ public class ServiceProviderImpl implements ServiceProvider {
             throw new MyRpcException(MyRpcError.SERVICE_NOT_FOUND);
         }
         return service;
+    }
+
+
+    @Override
+    public void publishService(Object service, Integer port) {
+        try {
+            this.addService(service);
+            String host = InetAddress.getLocalHost().getHostAddress();
+            serviceRegistry.register(service.getClass().getInterfaces()[0].getCanonicalName(), new InetSocketAddress(host, port));
+        } catch (UnknownHostException e) {
+            log.error("获取localhost失败", e);
+            throw new MyRpcException(MyRpcError.UNKNOWN_HOST);
+        }
     }
 
 }

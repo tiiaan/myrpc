@@ -8,6 +8,8 @@ import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyServerHandler;
 import com.tiiaan.rpc.json.JsonSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
+import com.tiiaan.rpc.provider.ServiceProvider;
+import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -29,9 +31,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyRpcServer extends AbstractRpcServer {
 
+
+    private final ServiceProvider serviceProvider = new ServiceProviderImpl();
+
+
     public NettyRpcServer(Integer port) {
         super(port);
     }
+
 
     @Override
     public void start() {
@@ -64,6 +71,12 @@ public class NettyRpcServer extends AbstractRpcServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+
+    @Override
+    public void register(Object service) {
+        serviceProvider.publishService(service, port);
     }
 
 }

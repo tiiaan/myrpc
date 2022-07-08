@@ -21,9 +21,10 @@ public class SocketRpcServerTest {
 
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
-        ServiceProvider serviceProvider = new ServiceProviderImpl();
-        serviceProvider.addService(helloService);
+        //ServiceProvider serviceProvider = new ServiceProviderImpl();
+        //serviceProvider.addService(helloService);
         SocketRpcServer socketRpcServer = new SocketRpcServer(9000);
+        socketRpcServer.register(helloService);
         socketRpcServer.start();
     }
 
