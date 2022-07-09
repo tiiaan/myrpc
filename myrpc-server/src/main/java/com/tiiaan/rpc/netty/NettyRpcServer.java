@@ -6,10 +6,10 @@ import com.tiiaan.rpc.MyRpcEncoder;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyServerHandler;
-import com.tiiaan.rpc.json.JsonSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
+import com.tiiaan.rpc.hook.MyRpcServerShutDownHook;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -63,11 +63,14 @@ public class NettyRpcServer extends AbstractRpcServer {
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
+            //优雅关闭钩子
+            MyRpcServerShutDownHook.getShutDownHook().start();
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             log.error("服务启动失败", e);
             throw new MyRpcException(MyRpcError.SERVER_START_FAILURE);
         } finally {
+            log.info("Netty 服务正在关闭");
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }

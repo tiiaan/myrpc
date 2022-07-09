@@ -29,6 +29,7 @@ public enum MyRpcError {
 
     SERVICE_REGISTRY_CONNECTION_FAILURE("连接注册中心失败"),
     SERVICE_REGISTER_FAILURE("服务注册失败"),
+    SERVICE_DEREGISTER_FAILURE("服务注销失败"),
     SERVICE_DISCOVERY_FAILURE("服务发现失败"),
     SERVICE_NOT_FOUND("找不到对应的服务"),
     SERVICE_NOT_IMPLEMENT_ANY_INTERFACE("注册的服务未实现接口"),

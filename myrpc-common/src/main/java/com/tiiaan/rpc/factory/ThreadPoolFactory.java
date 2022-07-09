@@ -47,15 +47,15 @@ public class ThreadPoolFactory {
     }
 
     public static void shutDownAllThreadPools() {
-        log.info("关闭所有线程池...");
+        log.info("正在关闭线程池");
         THREAD_POOLS_MAP.entrySet().parallelStream().forEach(entry -> {
             ExecutorService executorService = entry.getValue();
             executorService.shutdown();
-            log.info("关闭线程池 [{}] [{}]", entry.getKey(), executorService.isTerminated());
+            log.info("ThreadPool [{}] [{}]", entry.getKey(), executorService.isTerminated());
             try {
                 executorService.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException ie) {
-                log.error("关闭线程池失败", ie);
+            } catch (InterruptedException e) {
+                log.error("关闭线程池失败", e);
                 executorService.shutdownNow();
             }
         });
