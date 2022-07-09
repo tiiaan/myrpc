@@ -2,9 +2,11 @@ package com.tiiaan.rpc.nacos;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import com.tiiaan.rpc.MyRpcLoadBalancer;
 import com.tiiaan.rpc.ServiceDiscovery;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.random.RandomLoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -19,9 +21,16 @@ import java.util.List;
 @Slf4j
 public class NacosServiceDiscovery implements ServiceDiscovery {
 
+    private final MyRpcLoadBalancer myRpcLoadBalancer;
+
+
+    public NacosServiceDiscovery() {
+        myRpcLoadBalancer = new RandomLoadBalancer();
+    }
 
     @Override
     public InetSocketAddress lookupService(String serviceName) {
+        log.info("lookup service {}", serviceName);
         Instance instance = getInstance(serviceName);
         return new InetSocketAddress(instance.getIp(), instance.getPort());
     }
@@ -34,7 +43,7 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
                 log.error("找不到对应的服务");
                 throw new MyRpcException(MyRpcError.SERVICE_NOT_FOUND);
             }
-            return instances.get(0);
+            return myRpcLoadBalancer.select(instances);
         } catch (NacosException e) {
             log.error("服务发现失败", e);
             throw new MyRpcException(MyRpcError.SERVICE_DISCOVERY_FAILURE);

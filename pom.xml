@@ -19,6 +19,7 @@
         <module>myrpc-serializer</module>
         <module>myrpc-codec</module>
         <module>myrpc-registry</module>
+        <module>myrpc-loadbalancer</module>
     </modules>
 
     <properties>
