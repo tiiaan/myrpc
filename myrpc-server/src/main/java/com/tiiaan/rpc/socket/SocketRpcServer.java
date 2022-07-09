@@ -16,6 +16,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -34,7 +35,8 @@ public class SocketRpcServer extends AbstractRpcServer {
     public SocketRpcServer(Integer port) {
         this.port = port;
         this.myRpcRequestHandler = new MyRpcRequestHandler();
-        threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-rpc-server");
+        threadPool = ThreadPoolFactory.createThreadPoolIfAbsent("socket-rpc-server");
+        ThreadPoolFactory.monitorThreadPoolStatus((ThreadPoolExecutor) threadPool);
     }
 
 
@@ -50,10 +52,13 @@ public class SocketRpcServer extends AbstractRpcServer {
                 threadPool.execute(new SocketRequestHandlerRunnable(socket, myRpcRequestHandler));
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("连接失败", e);
             throw new MyRpcException(MyRpcError.CONNECTION_FAILURE);
+        } finally {
+            threadPool.shutdown();
         }
     }
+
 
     @Override
     public void register(Object service) {

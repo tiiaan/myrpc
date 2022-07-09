@@ -3,6 +3,7 @@ package com.tiiaan.rpc.socket.thread;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.enums.MyRpcError;
+import com.tiiaan.rpc.enums.ResponseStatus;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import lombok.AllArgsConstructor;
@@ -41,15 +42,26 @@ public class SocketRequestHandlerRunnable implements Runnable {
             ////反射执行方法，获得返回值
             //Object returnObject = method.invoke(service, myRpcRequest.getParameters());
 
-            Object returnObject = myRpcRequestHandler.handle(myRpcRequest);
+            MyRpcResponse myRpcResponse = null;
+            Object returnObject = null;
+            try {
+                returnObject = myRpcRequestHandler.handle(myRpcRequest);
+                myRpcResponse = MyRpcResponse.success(returnObject);
+            } catch (NoSuchMethodException e) {
+                log.error("找不到方法", e);
+                myRpcResponse = MyRpcResponse.fail(ResponseStatus.METHOD_NOT_FOUND);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                log.error("方法调用失败", e);
+                myRpcResponse = MyRpcResponse.fail(ResponseStatus.FAIL);
+            }
 
             //返回值写进响应
-            objectOutputStream.writeObject(MyRpcResponse.success(returnObject));
+            objectOutputStream.writeObject(myRpcResponse);
             objectOutputStream.flush();
             log.info("来自客户端 {}:{} 的调用请求处理成功", socket.getInetAddress().getHostAddress(), socket.getPort());
 
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            log.error("IO异常", e);
             throw new MyRpcException(MyRpcError.IO_ERROR);
         }
     }
