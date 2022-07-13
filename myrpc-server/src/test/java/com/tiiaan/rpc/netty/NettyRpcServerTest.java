@@ -6,7 +6,6 @@ import com.tiiaan.rpc.service.HelloService;
 import com.tiiaan.rpc.service.impl.HelloServiceImpl;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class NettyRpcServerTest {
 

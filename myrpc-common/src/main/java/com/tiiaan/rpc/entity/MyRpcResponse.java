@@ -15,14 +15,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class MyRpcResponse<T> implements Serializable {
 
+    private String requestId;
     private Integer statusCode;
     private String message;
     private T data;
 
-    public static <T> MyRpcResponse<T> success(T data) {
+    public static <T> MyRpcResponse<T> success(T data, String requestId) {
         MyRpcResponse<T> myRpcResponse = new MyRpcResponse<>();
         myRpcResponse.setStatusCode(ResponseStatus.SUCCESS.getCode());
         myRpcResponse.setData(data);
+        myRpcResponse.setRequestId(requestId);
         return myRpcResponse;
     }
 

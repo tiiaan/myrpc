@@ -16,6 +16,7 @@ import java.io.Serializable;
 @Builder
 public class MyRpcRequest implements Serializable {
 
+    private String requestId;
     private String interfaceName;
     private String methodName;
     private Object[] parameters;

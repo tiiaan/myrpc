@@ -1,13 +1,10 @@
 package com.tiiaan.rpc.netty;
 
-import com.sun.xml.internal.rngom.digested.DGroupPattern;
 import com.tiiaan.rpc.*;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.handler.NettyClientHandler;
-import com.tiiaan.rpc.json.JsonSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
 import com.tiiaan.rpc.nacos.NacosServiceDiscovery;
 import io.netty.bootstrap.Bootstrap;
@@ -15,11 +12,11 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.AttributeKey;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -33,7 +30,8 @@ public class NettyRpcClient implements MyRpcClient {
     private final Bootstrap bootstrap;
     private final EventLoopGroup group;
     private final ServiceDiscovery serviceDiscovery;
-
+    private final UnprocessedRequests unprocessedRequests;
+    private final ChannelCache channelCache;
 
 
     public NettyRpcClient() {
@@ -53,38 +51,63 @@ public class NettyRpcClient implements MyRpcClient {
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
+        this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+        this.channelCache = SingletonFactory.getInstance(ChannelCache.class);
     }
 
     @Override
     public Object sendRequest(MyRpcRequest myRpcRequest) {
+        CompletableFuture<MyRpcResponse> completableFuture = new CompletableFuture<>();
         try {
             InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getInterfaceName());
-            String serverHost = inetSocketAddress.getAddress().getHostAddress();
-            Integer serverPort = inetSocketAddress.getPort();
-            ChannelFuture future = bootstrap.connect(serverHost, serverPort).sync();
-            log.info("连接服务提供者 {}:{}", serverHost, serverPort);
-            Channel channel = future.channel();
-            if(channel != null) {
-                channel.writeAndFlush(myRpcRequest).addListener(future1 -> {
-                    if(future1.isSuccess()) {
-                        log.info("发送调用请求, {}", myRpcRequest);
-                    } else {
-                        log.error("请求发送失败", future1.cause());
-                    }
-                });
-                channel.closeFuture().sync();
-                AttributeKey<MyRpcResponse> key = AttributeKey.valueOf("rpcResponse");
-                return channel.attr(key).get();
+            Channel channel = getChannel(inetSocketAddress);
+            if (!channel.isActive()) {
+                log.info("Netty 服务正在关闭...");
+                group.shutdownGracefully();
+                return null;
             }
-            return null;
-        } catch (InterruptedException e) {
-            log.error("请求发送失败", e);
-            throw new MyRpcException(MyRpcError.REQUEST_FAILURE);
-        } finally {
-            log.info("Netty 服务正在关闭...");
-            group.shutdownGracefully();
+            unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);
+            channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) future1 -> {
+                if(future1.isSuccess()) {
+                    log.info("发送调用请求, {}", myRpcRequest);
+                } else {
+                    future1.channel().close();
+                    completableFuture.completeExceptionally(future1.cause());
+                    log.error("请求发送失败", future1.cause());
+                }
+            });
+        } catch (InterruptedException | ExecutionException e) {
+            unprocessedRequests.remove(myRpcRequest.getRequestId());
+            log.error(e.getMessage(), e);
+            Thread.currentThread().interrupt();
         }
+        return completableFuture;
     }
+
+
+    public Channel getChannel(InetSocketAddress inetSocketAddress) throws InterruptedException, ExecutionException {
+        Channel channel = channelCache.getChannel(inetSocketAddress);
+        if (channel == null) {
+            channel = createChannel(inetSocketAddress);
+            channelCache.setChannel(inetSocketAddress, channel);
+        }
+        return channel;
+    }
+
+
+    public Channel createChannel(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
+        CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
+        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) future1 -> {
+            if (future1.isSuccess()) {
+                log.info("连接服务提供者 {}:{}", inetSocketAddress.getAddress().getHostAddress(), inetSocketAddress.getPort());
+                completableFuture.complete(future1.channel());
+            } else {
+                throw new IllegalStateException();
+            }
+        });
+        return completableFuture.get();
+    }
+
 
     public void close() {
         group.shutdownGracefully();

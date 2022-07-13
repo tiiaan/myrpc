@@ -46,7 +46,7 @@ public class SocketRequestHandlerRunnable implements Runnable {
             Object returnObject = null;
             try {
                 returnObject = myRpcRequestHandler.handle(myRpcRequest);
-                myRpcResponse = MyRpcResponse.success(returnObject);
+                myRpcResponse = MyRpcResponse.success(returnObject, myRpcRequest.getRequestId());
             } catch (NoSuchMethodException e) {
                 log.error("找不到方法", e);
                 myRpcResponse = MyRpcResponse.fail(ResponseStatus.METHOD_NOT_FOUND);

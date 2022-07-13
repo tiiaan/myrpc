@@ -40,7 +40,7 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
         try {
             List<Instance> instances = NacosUtil.getAllInstances(serviceName);
             if (instances == null || instances.size() == 0) {
-                log.error("找不到对应的服务");
+                log.error("找不到对应的服务 {}", instances.size());
                 throw new MyRpcException(MyRpcError.SERVICE_NOT_FOUND);
             }
             return myRpcLoadBalancer.select(instances);
