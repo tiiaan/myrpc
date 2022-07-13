@@ -37,8 +37,13 @@ public class MyRpcClientProxyTest {
         MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient);
 
         HelloService helloService = proxy.getProxyInstance(HelloService.class);
-        MyMessage returnObject = helloService.hello(new MyMessage("hello world!"));
-        System.out.println(returnObject);
+
+        MyMessage returnObject = null;
+        for (int i = 0; i < 100; i++) {
+            returnObject = helloService.hello(new MyMessage("hello world!"));
+            System.out.println(returnObject);
+        }
+
     }
 
 }

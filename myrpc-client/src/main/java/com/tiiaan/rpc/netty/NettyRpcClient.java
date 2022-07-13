@@ -41,7 +41,11 @@ public class NettyRpcClient implements MyRpcClient {
         bootstrap = new Bootstrap();
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
+                //连接的超时时间，超过这个时间还是建立不上的话则代表连接失败
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
+                //是否开启 TCP 底层心跳机制
                 .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
@@ -64,21 +68,26 @@ public class NettyRpcClient implements MyRpcClient {
         try {
             InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getInterfaceName());
             Channel channel = getChannel(inetSocketAddress);
-            if (!channel.isActive()) {
-                log.info("Netty 服务正在关闭...");
-                group.shutdownGracefully();
-                return null;
+
+            //if (!channel.isActive()) {
+            //    log.info("Netty 服务正在关闭...");
+            //    group.shutdownGracefully();
+            //    return null;
+            //}
+
+            if (channel.isActive()) {
+                unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);
+                channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) future1 -> {
+                    if(future1.isSuccess()) {
+                        log.info("发送调用请求, {}", myRpcRequest);
+                    } else {
+                        future1.channel().close();
+                        completableFuture.completeExceptionally(future1.cause());
+                        log.error("请求发送失败", future1.cause());
+                    }
+                });
             }
-            unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);
-            channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) future1 -> {
-                if(future1.isSuccess()) {
-                    log.info("发送调用请求, {}", myRpcRequest);
-                } else {
-                    future1.channel().close();
-                    completableFuture.completeExceptionally(future1.cause());
-                    log.error("请求发送失败", future1.cause());
-                }
-            });
+
         } catch (InterruptedException | ExecutionException e) {
             unprocessedRequests.remove(myRpcRequest.getRequestId());
             log.error(e.getMessage(), e);
