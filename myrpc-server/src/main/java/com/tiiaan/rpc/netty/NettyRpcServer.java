@@ -6,6 +6,7 @@ import com.tiiaan.rpc.MyRpcEncoder;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyServerHandler;
+import com.tiiaan.rpc.hessian.HessianSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
@@ -58,6 +59,7 @@ public class NettyRpcServer extends AbstractRpcServer {
                             ChannelPipeline pipeline = ch.pipeline();
                             //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
                             pipeline.addLast(new MyRpcEncoder(new KryoSerializer()));
+                            //pipeline.addLast(new MyRpcEncoder(new HessianSerializer()));
                             pipeline.addLast(new MyRpcDecoder());
                             pipeline.addLast(new NettyServerHandler());
                         }

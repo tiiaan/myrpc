@@ -5,6 +5,7 @@ import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.handler.NettyClientHandler;
+import com.tiiaan.rpc.hessian.HessianSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
 import com.tiiaan.rpc.nacos.NacosServiceDiscovery;
 import io.netty.bootstrap.Bootstrap;
@@ -48,12 +49,14 @@ public class NettyRpcClient implements MyRpcClient {
                         pipeline.addLast(new MyRpcDecoder());
                         //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
                         pipeline.addLast(new MyRpcEncoder(new KryoSerializer()));
+                        //pipeline.addLast(new MyRpcEncoder(new HessianSerializer()));
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelCache = SingletonFactory.getInstance(ChannelCache.class);
     }
+
 
     @Override
     public Object sendRequest(MyRpcRequest myRpcRequest) {

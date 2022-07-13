@@ -1,5 +1,6 @@
 package com.tiiaan.rpc;
 
+import com.tiiaan.rpc.hessian.HessianSerializer;
 import com.tiiaan.rpc.json.JsonSerializer;
 import com.tiiaan.rpc.kryo.KryoSerializer;
 import org.checkerframework.checker.units.qual.K;
@@ -24,6 +25,8 @@ public interface MyRpcSerializer {
                 return new KryoSerializer();
             case 1:
                 return new JsonSerializer();
+            case 2:
+                return new HessianSerializer();
             default:
                 return null;
         }
