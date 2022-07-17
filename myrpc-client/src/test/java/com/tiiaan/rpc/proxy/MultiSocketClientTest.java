@@ -2,6 +2,7 @@ package com.tiiaan.rpc.proxy;
 
 import com.tiiaan.rpc.MyRpcClient;
 import com.tiiaan.rpc.entity.MyMessage;
+import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.service.HelloService;
 import com.tiiaan.rpc.socket.SocketRpcClient;
 
@@ -32,7 +33,7 @@ public class MultiSocketClientTest {
                 MyRpcClient socketRpcClient = new SocketRpcClient()
                         .setServerHost("192.168.10.4")
                         .setServerPort(9000);
-                MyRpcClientProxy proxy = new MyRpcClientProxy(socketRpcClient);
+                MyRpcClientProxy proxy = new MyRpcClientProxy(socketRpcClient, new MyRpcService());
                 try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
                 HelloService helloService = proxy.getProxyInstance(HelloService.class);
                 MyMessage returnObject = helloService.hello(new MyMessage("hello world!"));

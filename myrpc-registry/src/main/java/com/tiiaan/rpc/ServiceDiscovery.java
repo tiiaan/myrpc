@@ -10,6 +10,6 @@ import java.net.InetSocketAddress;
 
 public interface ServiceDiscovery {
 
-    InetSocketAddress lookupService(String serviceName);
+    InetSocketAddress lookupService(String serviceFullName);
 
 }

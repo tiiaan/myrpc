@@ -1,5 +1,7 @@
 package com.tiiaan.rpc.provider;
 
+import com.tiiaan.rpc.entity.MyRpcService;
+
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
  * @version 0.0
@@ -9,8 +11,11 @@ package com.tiiaan.rpc.provider;
 public interface ServiceProvider {
 
     public void addService(Object service);
-    public Object getService(String interfaceName);
+    public void addService(MyRpcService myRpcService);
+
+    public Object getService(String serviceFullName);
 
     public void publishService(Object service, Integer port);
+    public void publishService(MyRpcService myRpcService, Integer port);
 
 }

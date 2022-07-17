@@ -2,6 +2,7 @@ package com.tiiaan.rpc.proxy;
 
 import com.tiiaan.rpc.MyRpcClient;
 import com.tiiaan.rpc.entity.MyMessage;
+import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.netty.NettyRpcClient;
 import com.tiiaan.rpc.service.HelloService;
 import com.tiiaan.rpc.socket.SocketRpcClient;
@@ -21,7 +22,7 @@ public class MyRpcClientProxyTest {
 
 
         MyRpcClient nettyRpcClient = new NettyRpcClient();
-        MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient);
+        MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient, new MyRpcService());
 
         HelloService helloService = proxy.getProxyInstance(HelloService.class);
         MyMessage returnObject = helloService.hello(new MyMessage("hello world!"));
@@ -36,19 +37,19 @@ public class MyRpcClientProxyTest {
         //MyRpcClientProxy proxy = new MyRpcClientProxy(socketRpcClient);
 
         NettyRpcClient nettyRpcClient = new NettyRpcClient();
-        MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient);
+        MyRpcClientProxy proxy = new MyRpcClientProxy(nettyRpcClient, new MyRpcService("1.0"));
 
         HelloService helloService = proxy.getProxyInstance(HelloService.class);
-        //MyMessage hello = helloService.hello(new MyMessage("hello world!"));
-        //System.out.println(hello);
+        MyMessage hello = helloService.hello(new MyMessage("hello world!"));
+        System.out.println(hello);
 
 
-        MyMessage returnObject = null;
-        for (int i = 0; i < 10; i++) {
-            returnObject = helloService.hello(new MyMessage("hello " + i));
-            System.out.println(returnObject);
-            try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
-        }
+        //MyMessage returnObject = null;
+        //for (int i = 0; i < 10; i++) {
+        //    returnObject = helloService.hello(new MyMessage("hello " + i));
+        //    System.out.println(returnObject);
+        //    try { TimeUnit.SECONDS.sleep(3); } catch (InterruptedException e) { e.printStackTrace(); }
+        //}
 
     }
 

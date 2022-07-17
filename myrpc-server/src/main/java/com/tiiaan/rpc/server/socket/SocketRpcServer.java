@@ -1,13 +1,14 @@
-package com.tiiaan.rpc.socket;
+package com.tiiaan.rpc.server.socket;
 
-import com.tiiaan.rpc.AbstractRpcServer;
+import com.tiiaan.rpc.entity.MyRpcService;
+import com.tiiaan.rpc.server.AbstractRpcServer;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.factory.ThreadPoolFactory;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
-import com.tiiaan.rpc.socket.thread.SocketRequestHandlerRunnable;
+import com.tiiaan.rpc.server.socket.thread.SocketRequestHandlerRunnable;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -61,9 +62,14 @@ public class SocketRpcServer extends AbstractRpcServer {
     }
 
 
-    @Override
-    public void register(Object service) {
-        serviceProvider.addService(service);
-    }
+    //@Override
+    //public void register(Object service) {
+    //    serviceProvider.addService(service);
+    //}
 
+    @Override
+    public void register(Object service, String version) {
+        //serviceProvider.publishService(service, port);
+        serviceProvider.publishService(new MyRpcService(service, version), port);
+    }
 }

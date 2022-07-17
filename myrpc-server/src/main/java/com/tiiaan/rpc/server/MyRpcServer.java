@@ -1,4 +1,6 @@
-package com.tiiaan.rpc;
+package com.tiiaan.rpc.server;
+
+import com.tiiaan.rpc.entity.MyRpcService;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -10,6 +12,6 @@ public interface MyRpcServer {
 
     void start();
 
-    void register(Object service);
+    void register(Object service, String version);
 
 }

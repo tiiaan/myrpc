@@ -1,4 +1,4 @@
-package com.tiiaan.rpc;
+package com.tiiaan.rpc.server;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

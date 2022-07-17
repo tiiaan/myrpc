@@ -1,4 +1,4 @@
-package com.tiiaan.rpc.socket.thread;
+package com.tiiaan.rpc.server.socket.thread;
 
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;

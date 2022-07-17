@@ -2,8 +2,10 @@ package com.tiiaan.rpc.netty;
 
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
+import com.tiiaan.rpc.server.netty.NettyRpcServer;
 import com.tiiaan.rpc.service.HelloService;
 import com.tiiaan.rpc.service.impl.HelloServiceImpl;
+import com.tiiaan.rpc.service.impl.HelloServiceNewImpl;
 import org.junit.Test;
 
 
@@ -17,15 +19,16 @@ public class NettyRpcServerTest {
         serviceProvider.addService(helloService);
         NettyRpcServer nettyRpcServer = new NettyRpcServer(9000);
         nettyRpcServer.start();
-
     }
+
 
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
         //ServiceProvider serviceProvider = new ServiceProviderImpl();
         //serviceProvider.addService(helloService);
-        NettyRpcServer nettyRpcServer = new NettyRpcServer(9004);
-        nettyRpcServer.register(helloService);
+        NettyRpcServer nettyRpcServer = new NettyRpcServer(9000);
+        nettyRpcServer.register(helloService, "");
+        nettyRpcServer.register(new HelloServiceNewImpl(), "1.0");
         nettyRpcServer.start();
     }
 

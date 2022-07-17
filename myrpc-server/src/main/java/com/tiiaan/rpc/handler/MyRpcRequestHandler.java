@@ -2,6 +2,7 @@ package com.tiiaan.rpc.handler;
 
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
+import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.enums.ResponseStatus;
 import com.tiiaan.rpc.exception.MyRpcException;
@@ -32,8 +33,13 @@ public class MyRpcRequestHandler {
 
 
     public Object handle(MyRpcRequest myRpcRequest) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Object service = serviceProvider.getService(myRpcRequest.getInterfaceName());
+        Object service = serviceProvider.getService(getServiceFullName(myRpcRequest));
         return invokeTargetMethod(myRpcRequest, service);
+    }
+
+
+    private String getServiceFullName(MyRpcRequest myRpcRequest) {
+        return myRpcRequest.getInterfaceName() + myRpcRequest.getVersion();
     }
 
 

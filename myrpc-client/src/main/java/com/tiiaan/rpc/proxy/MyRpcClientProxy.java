@@ -3,6 +3,7 @@ package com.tiiaan.rpc.proxy;
 import com.tiiaan.rpc.MyRpcClient;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
+import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.enums.ResponseStatus;
 import com.tiiaan.rpc.exception.MyRpcException;
@@ -26,10 +27,12 @@ import java.util.concurrent.ExecutionException;
 @Slf4j
 public class MyRpcClientProxy implements InvocationHandler {
 
-    private MyRpcClient myRpcClient;
+    private final MyRpcClient myRpcClient;
+    private final MyRpcService myRpcService;
 
-    public MyRpcClientProxy(MyRpcClient myRpcClient) {
+    public MyRpcClientProxy(MyRpcClient myRpcClient, MyRpcService myRpcService) {
         this.myRpcClient = myRpcClient;
+        this.myRpcService = myRpcService;
     }
 
     public <T> T getProxyInstance(Class<T> clazz) {
@@ -45,6 +48,7 @@ public class MyRpcClientProxy implements InvocationHandler {
                 .methodName(method.getName())
                 .parameters(args)
                 .paramTypes(method.getParameterTypes())
+                .version(myRpcService.getVersion())
                 .build();
         //2.向服务提供者发送请求
         MyRpcResponse<Object> myRpcResponse = null;

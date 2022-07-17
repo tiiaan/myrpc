@@ -1,13 +1,11 @@
 package com.tiiaan.rpc.socket;
 
-import com.tiiaan.rpc.factory.ThreadPoolFactory;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
+import com.tiiaan.rpc.server.socket.SocketRpcServer;
 import com.tiiaan.rpc.service.HelloService;
 import com.tiiaan.rpc.service.impl.HelloServiceImpl;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class SocketRpcServerTest {
 
@@ -25,7 +23,7 @@ public class SocketRpcServerTest {
         //ServiceProvider serviceProvider = new ServiceProviderImpl();
         //serviceProvider.addService(helloService);
         SocketRpcServer socketRpcServer = new SocketRpcServer(9000);
-        socketRpcServer.register(helloService);
+        socketRpcServer.register(helloService, null);
         socketRpcServer.start();
     }
 

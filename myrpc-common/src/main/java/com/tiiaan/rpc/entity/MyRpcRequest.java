@@ -21,5 +21,10 @@ public class MyRpcRequest implements Serializable {
     private String methodName;
     private Object[] parameters;
     private Class<?>[] paramTypes;
+    private String version;
+
+    public String getServiceFullName() {
+        return this.getInterfaceName() + this.getVersion();
+    }
 
 }

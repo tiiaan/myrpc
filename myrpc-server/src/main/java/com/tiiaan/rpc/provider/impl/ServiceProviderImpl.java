@@ -1,6 +1,7 @@
 package com.tiiaan.rpc.provider.impl;
 
 import com.tiiaan.rpc.ServiceRegistry;
+import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
 import com.tiiaan.rpc.nacos.NacosServiceRegistry;
@@ -47,16 +48,30 @@ public class ServiceProviderImpl implements ServiceProvider {
         if (interfaces == null || interfaces.length == 0) {
             throw new MyRpcException(MyRpcError.SERVICE_NOT_IMPLEMENT_ANY_INTERFACE);
         }
-        for (Class<?> inter : interfaces) {
-            interfaceMap.put(inter.getCanonicalName(), service);
-            log.info("服务注册成功 interface={}, serviceName={}, service={}", inter.getCanonicalName(), serviceName, service);
+        interfaceMap.put(interfaces[0].getCanonicalName(), service);
+        log.info("服务注册成功 interface={}, serviceName={}, service={}", interfaces[0].getCanonicalName(), serviceName, service);
+
+        //for (Class<?> inter : interfaces) {
+        //    interfaceMap.put(inter.getCanonicalName(), service);
+        //    log.info("服务注册成功 interface={}, serviceName={}, service={}", inter.getCanonicalName(), serviceName, service);
+        //}
+    }
+
+    @Override
+    public void addService(MyRpcService myRpcService) {
+        String serviceFullName = myRpcService.getServiceFullName();
+        if (registeredService.contains(serviceFullName)) {
+            return;
         }
+        registeredService.add(serviceFullName);
+        interfaceMap.put(serviceFullName, myRpcService.getService());
+        //log.info("服务注册成功 interface={}, serviceName={}, service={}", myRpcService.getService().getClass().getInterfaces()[0].getCanonicalName(), serviceFullName, myRpcService.getService());
     }
 
 
     @Override
-    public Object getService(String interfaceName) {
-        Object service = interfaceMap.get(interfaceName);
+    public Object getService(String serviceFullName) {
+        Object service = interfaceMap.get(serviceFullName);
         if (service == null) {
             throw new MyRpcException(MyRpcError.SERVICE_NOT_FOUND);
         }
@@ -71,6 +86,19 @@ public class ServiceProviderImpl implements ServiceProvider {
             String host = InetAddress.getLocalHost().getHostAddress();
             serviceRegistry.register(service.getClass().getInterfaces()[0].getCanonicalName(), new InetSocketAddress(host, port));
         } catch (UnknownHostException e) {
+            log.error("获取localhost失败", e);
+            throw new MyRpcException(MyRpcError.UNKNOWN_HOST);
+        }
+    }
+
+
+    @Override
+    public void publishService(MyRpcService myRpcService, Integer port) {
+        try {
+            this.addService(myRpcService);
+            String host = InetAddress.getLocalHost().getHostAddress();
+            serviceRegistry.register(myRpcService.getServiceFullName(), new InetSocketAddress(host, port));
+        } catch (Exception e) {
             log.error("获取localhost失败", e);
             throw new MyRpcException(MyRpcError.UNKNOWN_HOST);
         }

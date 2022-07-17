@@ -33,9 +33,9 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public InetSocketAddress lookupService(String serviceName) {
-        log.info("lookup service {}", serviceName);
-        Instance instance = getInstance(serviceName);
+    public InetSocketAddress lookupService(String serviceFullName) {
+        log.info("lookup service {}", serviceFullName);
+        Instance instance = getInstance(serviceFullName);
         return new InetSocketAddress(instance.getIp(), instance.getPort());
     }
 
@@ -44,7 +44,7 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
         try {
             List<Instance> instances = NacosUtil.getAllInstances(serviceName);
             if (instances == null || instances.size() == 0) {
-                log.error("找不到对应的服务 {}", instances.size());
+                log.error("找不到对应的服务 {}", instances);
                 throw new MyRpcException(MyRpcError.SERVICE_NOT_FOUND);
             }
             return myRpcLoadBalancer.select(instances);

@@ -67,7 +67,7 @@ public class NettyRpcClient implements MyRpcClient {
     public Object sendRequest(MyRpcRequest myRpcRequest) {
         CompletableFuture<MyRpcResponse> completableFuture = new CompletableFuture<>();
         try {
-            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getInterfaceName());
+            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getServiceFullName());
             Channel channel = getChannel(inetSocketAddress);
 
             //if (!channel.isActive()) {
