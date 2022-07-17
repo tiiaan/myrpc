@@ -6,7 +6,9 @@ import com.tiiaan.rpc.MyRpcLoadBalancer;
 import com.tiiaan.rpc.ServiceDiscovery;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.random.RandomLoadBalancer;
+import com.tiiaan.rpc.round.RoundRobinLoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -25,7 +27,9 @@ public class NacosServiceDiscovery implements ServiceDiscovery {
 
 
     public NacosServiceDiscovery() {
-        myRpcLoadBalancer = new RandomLoadBalancer();
+        //myRpcLoadBalancer = new RandomLoadBalancer();
+        myRpcLoadBalancer = SingletonFactory.getInstance(RoundRobinLoadBalancer.class);
+        //myRpcLoadBalancer = SingletonFactory.getInstance(RandomLoadBalancer.class);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class NettyRpcClient implements MyRpcClient {
 
 
     public NettyRpcClient() {
-        serviceDiscovery = new NacosServiceDiscovery();
+        //serviceDiscovery = new NacosServiceDiscovery();
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -57,6 +57,7 @@ public class NettyRpcClient implements MyRpcClient {
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
+        this.serviceDiscovery = SingletonFactory.getInstance(NacosServiceDiscovery.class);
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelCache = SingletonFactory.getInstance(ChannelCache.class);
     }

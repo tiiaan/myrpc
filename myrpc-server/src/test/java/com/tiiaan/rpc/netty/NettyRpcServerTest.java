@@ -24,7 +24,7 @@ public class NettyRpcServerTest {
         HelloService helloService = new HelloServiceImpl();
         //ServiceProvider serviceProvider = new ServiceProviderImpl();
         //serviceProvider.addService(helloService);
-        NettyRpcServer nettyRpcServer = new NettyRpcServer(9002);
+        NettyRpcServer nettyRpcServer = new NettyRpcServer(9004);
         nettyRpcServer.register(helloService);
         nettyRpcServer.start();
     }

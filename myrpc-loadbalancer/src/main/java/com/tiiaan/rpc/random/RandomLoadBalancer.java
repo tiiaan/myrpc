@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
  * @version 0.0
- * description
+ * 随机负载均衡
  */
 
 public class RandomLoadBalancer extends AbstractLoadBalancer {

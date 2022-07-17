@@ -24,7 +24,7 @@ import java.util.Set;
 public class NacosUtil {
 
     private static final NamingService namingService;
-    private static final String NACOS_SERVER_ADDRESS = "192.168.10.4:8848";
+    private static final String NACOS_SERVER_ADDRESS = "100.80.20.132:8848";
     private static final boolean USE_IP_MODE = true;
 
     private static InetSocketAddress registeredAddress;
