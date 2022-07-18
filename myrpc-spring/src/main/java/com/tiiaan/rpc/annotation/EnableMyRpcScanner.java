@@ -1,6 +1,6 @@
 package com.tiiaan.rpc.annotation;
 
-import com.tiiaan.rpc.MyRpcServiceScanner;
+import com.tiiaan.rpc.scanner.MyRpcServiceScanner;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

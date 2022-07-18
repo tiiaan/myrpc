@@ -9,6 +9,8 @@ import com.tiiaan.rpc.proxy.MyRpcClientProxy;
 import com.tiiaan.rpc.service.HelloService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import java.util.concurrent.TimeUnit;
+
 @EnableMyRpcScanner(basePackage = {"com.tiiaan.rpc"})
 public class ExampleClient {
     public static void main(String[] args) {
@@ -21,7 +23,9 @@ public class ExampleClient {
 
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(ExampleClient.class);
         HelloController helloController = (HelloController) applicationContext.getBean("helloController");
-        helloController.test();
-
+        for (int i = 0; i < 10; i++) {
+            helloController.test();
+            try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
+        }
     }
 }

@@ -5,9 +5,9 @@ import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.handler.NettyClientHandler;
-import com.tiiaan.rpc.hessian.HessianSerializer;
-import com.tiiaan.rpc.kryo.KryoSerializer;
-import com.tiiaan.rpc.nacos.NacosServiceDiscovery;
+import com.tiiaan.rpc.registry.MyRpcServiceDiscovery;
+import com.tiiaan.rpc.serialize.kryo.KryoSerialize;
+import com.tiiaan.rpc.registry.nacos.NacosServiceDiscovery;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -30,13 +30,12 @@ public class NettyRpcClient implements MyRpcClient {
 
     private final Bootstrap bootstrap;
     private final EventLoopGroup group;
-    private final ServiceDiscovery serviceDiscovery;
+    private final MyRpcServiceDiscovery myRpcServiceDiscovery;
     private final UnprocessedRequests unprocessedRequests;
-    private final ChannelCache channelCache;
+    private final NettyChannel nettyChannel;
 
 
     public NettyRpcClient() {
-        //serviceDiscovery = new NacosServiceDiscovery();
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group)
@@ -52,43 +51,36 @@ public class NettyRpcClient implements MyRpcClient {
                         ChannelPipeline pipeline = ch.pipeline();
                         pipeline.addLast(new MyRpcDecoder());
                         //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
-                        pipeline.addLast(new MyRpcEncoder(new KryoSerializer()));
+                        pipeline.addLast(new MyRpcEncoder(new KryoSerialize()));
                         //pipeline.addLast(new MyRpcEncoder(new HessianSerializer()));
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
-        this.serviceDiscovery = SingletonFactory.getInstance(NacosServiceDiscovery.class);
+        //this.myRpcServiceDiscovery = SingletonFactory.getInstance(NacosServiceDiscovery.class);
+        myRpcServiceDiscovery = ExtensionLoader.getExtensionLoader(MyRpcServiceDiscovery.class).getExtension("NACOS");
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
-        this.channelCache = SingletonFactory.getInstance(ChannelCache.class);
+        this.nettyChannel = SingletonFactory.getInstance(NettyChannel.class);
     }
 
 
     @Override
     public Object sendRequest(MyRpcRequest myRpcRequest) {
-        CompletableFuture<MyRpcResponse> completableFuture = new CompletableFuture<>();
+        CompletableFuture<MyRpcResponse<Object>> completableFuture = new CompletableFuture<>();
         try {
-            InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(myRpcRequest.getServiceFullName());
+            InetSocketAddress inetSocketAddress = myRpcServiceDiscovery.lookupService(myRpcRequest.getServiceFullName());
             Channel channel = getChannel(inetSocketAddress);
-
-            //if (!channel.isActive()) {
-            //    log.info("Netty 服务正在关闭...");
-            //    group.shutdownGracefully();
-            //    return null;
-            //}
-
             if (channel.isActive()) {
                 unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);
-                channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) future1 -> {
-                    if(future1.isSuccess()) {
-                        log.info("发送调用请求, {}", myRpcRequest);
+                channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) channelFuture -> {
+                    if(channelFuture.isSuccess()) {
+                        log.info("请求发送成功 [{}]", myRpcRequest);
                     } else {
-                        future1.channel().close();
-                        completableFuture.completeExceptionally(future1.cause());
-                        log.error("请求发送失败", future1.cause());
+                        channelFuture.channel().close();
+                        completableFuture.completeExceptionally(channelFuture.cause());
+                        log.error("请求发送失败", channelFuture.cause());
                     }
                 });
             }
-
         } catch (InterruptedException | ExecutionException e) {
             unprocessedRequests.remove(myRpcRequest.getRequestId());
             log.error(e.getMessage(), e);
@@ -99,21 +91,21 @@ public class NettyRpcClient implements MyRpcClient {
 
 
     public Channel getChannel(InetSocketAddress inetSocketAddress) throws InterruptedException, ExecutionException {
-        Channel channel = channelCache.getChannel(inetSocketAddress);
+        Channel channel = nettyChannel.getChannel(inetSocketAddress);
         if (channel == null) {
-            channel = createChannel(inetSocketAddress);
-            channelCache.setChannel(inetSocketAddress, channel);
+            channel = doConnect(inetSocketAddress);
+            nettyChannel.addChannel(inetSocketAddress, channel);
         }
         return channel;
     }
 
 
-    public Channel createChannel(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
+    public Channel doConnect(InetSocketAddress inetSocketAddress) throws ExecutionException, InterruptedException {
         CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
-        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) future1 -> {
-            if (future1.isSuccess()) {
-                log.info("连接服务提供者 {}:{}", inetSocketAddress.getAddress().getHostAddress(), inetSocketAddress.getPort());
-                completableFuture.complete(future1.channel());
+        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) channelFuture -> {
+            if (channelFuture.isSuccess()) {
+                log.info("连接服务提供者 [{}:{}]", inetSocketAddress.getAddress().getHostAddress(), inetSocketAddress.getPort());
+                completableFuture.complete(channelFuture.channel());
             } else {
                 throw new IllegalStateException();
             }

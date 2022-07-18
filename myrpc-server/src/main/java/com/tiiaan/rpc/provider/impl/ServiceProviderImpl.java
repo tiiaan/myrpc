@@ -1,13 +1,13 @@
 package com.tiiaan.rpc.provider.impl;
 
-import com.tiiaan.rpc.ServiceRegistry;
+import com.tiiaan.rpc.ExtensionLoader;
+import com.tiiaan.rpc.registry.MyRpcServiceRegistry;
 import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
-import com.tiiaan.rpc.nacos.NacosServiceRegistry;
+import com.tiiaan.rpc.registry.nacos.NacosServiceRegistry;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.server.AbstractRpcServer;
-import com.tiiaan.rpc.server.netty.NettyRpcServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -16,7 +16,6 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -29,12 +28,13 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     private final Map<String, Object> interfaceMap;
     private final Set<String> registeredService;
-    private final ServiceRegistry serviceRegistry;
+    private final MyRpcServiceRegistry myRpcServiceRegistry;
 
     public ServiceProviderImpl() {
         interfaceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
-        serviceRegistry = new NacosServiceRegistry();
+        //myRpcServiceRegistry = new NacosServiceRegistry();
+        myRpcServiceRegistry = ExtensionLoader.getExtensionLoader(MyRpcServiceRegistry.class).getExtension("NACOS");
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ServiceProviderImpl implements ServiceProvider {
         try {
             this.addService(service);
             String host = InetAddress.getLocalHost().getHostAddress();
-            serviceRegistry.register(service.getClass().getInterfaces()[0].getCanonicalName(), new InetSocketAddress(host, AbstractRpcServer.PORT));
+            myRpcServiceRegistry.register(service.getClass().getInterfaces()[0].getCanonicalName(), new InetSocketAddress(host, AbstractRpcServer.PORT));
         } catch (UnknownHostException e) {
             log.error("获取localhost失败", e);
             throw new MyRpcException(MyRpcError.UNKNOWN_HOST);
@@ -92,7 +92,7 @@ public class ServiceProviderImpl implements ServiceProvider {
         try {
             this.addService(myRpcService);
             String host = InetAddress.getLocalHost().getHostAddress();
-            serviceRegistry.register(myRpcService.getServiceFullName(), new InetSocketAddress(host, AbstractRpcServer.PORT));
+            myRpcServiceRegistry.register(myRpcService.getServiceFullName(), new InetSocketAddress(host, AbstractRpcServer.PORT));
         } catch (Exception e) {
             log.error("获取localhost失败", e);
             throw new MyRpcException(MyRpcError.UNKNOWN_HOST);

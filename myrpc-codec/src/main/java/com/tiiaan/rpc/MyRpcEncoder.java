@@ -2,6 +2,7 @@ package com.tiiaan.rpc;
 
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.enums.PackageType;
+import com.tiiaan.rpc.serialize.MyRpcSerialize;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -16,9 +17,9 @@ public class MyRpcEncoder extends MessageToByteEncoder {
 
     private static final int MAGIC_NUMBER = 0xCAFEBABE;
 
-    private final MyRpcSerializer serializer;
+    private final MyRpcSerialize serializer;
 
-    public MyRpcEncoder(MyRpcSerializer serializer) {
+    public MyRpcEncoder(MyRpcSerialize serializer) {
         this.serializer = serializer;
     }
 

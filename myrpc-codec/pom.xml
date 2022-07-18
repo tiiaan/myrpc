@@ -25,7 +25,7 @@
         </dependency>
         <dependency>
             <groupId>com.tiiaan.rpc</groupId>
-            <artifactId>myrpc-serializer</artifactId>
+            <artifactId>myrpc-serialize</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

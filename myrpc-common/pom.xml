@@ -88,6 +88,11 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.30</version>
         </dependency>
+        <dependency>
+            <groupId>com.tiiaan.rpc</groupId>
+            <artifactId>myrpc-spi</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <!-- <dependency> -->
         <!--     <groupId>com.tiiaan.rpc</groupId> -->
         <!--     <artifactId>example-api-common</artifactId> -->

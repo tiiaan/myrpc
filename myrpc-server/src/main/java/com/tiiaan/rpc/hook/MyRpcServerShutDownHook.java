@@ -1,7 +1,7 @@
 package com.tiiaan.rpc.hook;
 
 import com.tiiaan.rpc.factory.ThreadPoolFactory;
-import com.tiiaan.rpc.nacos.NacosUtil;
+import com.tiiaan.rpc.registry.nacos.NacosUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

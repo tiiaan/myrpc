@@ -5,6 +5,7 @@ import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.enums.PackageType;
 import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.serialize.MyRpcSerialize;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ReplayingDecoder;
@@ -41,7 +42,7 @@ public class MyRpcDecoder extends ReplayingDecoder {
             throw new MyRpcException(MyRpcError.UNKNOWN_PACKAGE_TYPE);
         }
         int serializerCode = in.readInt();
-        MyRpcSerializer serializer = MyRpcSerializer.getSerializer(serializerCode);
+        MyRpcSerialize serializer = MyRpcSerialize.getSerializer(serializerCode);
         if (serializer == null) {
             log.error("不识别的序列化器 {}", serializerCode);
             throw new MyRpcException(MyRpcError.UNKNOWN_SERIALIZER);

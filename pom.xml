@@ -16,11 +16,12 @@
         <module>myrpc-server</module>
         <module>myrpc-client</module>
         <module>myrpc-core</module>
-        <module>myrpc-serializer</module>
+        <module>myrpc-serialize</module>
         <module>myrpc-codec</module>
         <module>myrpc-registry</module>
-        <module>myrpc-loadbalancer</module>
+        <module>myrpc-loadbalance</module>
         <module>myrpc-spring</module>
+        <module>myrpc-spi</module>
     </modules>
 
     <properties>

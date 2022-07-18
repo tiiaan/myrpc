@@ -14,19 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UnprocessedRequests {
 
-    private static Map<String, CompletableFuture<MyRpcResponse>> unprocessedFuture =
-            new ConcurrentHashMap<>();
+    private static final Map<String, CompletableFuture<MyRpcResponse<Object>>> FUTURES = new ConcurrentHashMap<>();
 
-    public void put(String requestId, CompletableFuture<MyRpcResponse> future) {
-        unprocessedFuture.put(requestId, future);
+    public void put(String requestId, CompletableFuture<MyRpcResponse<Object>> future) {
+        FUTURES.put(requestId, future);
     }
 
     public void remove(String requestId) {
-        unprocessedFuture.remove(requestId);
+        FUTURES.remove(requestId);
     }
 
-    public void complete(MyRpcResponse myRpcResponse) {
-        CompletableFuture<MyRpcResponse> completableFuture = unprocessedFuture.get(myRpcResponse.getRequestId());
+    public void complete(MyRpcResponse<Object> myRpcResponse) {
+        CompletableFuture<MyRpcResponse<Object>> completableFuture = FUTURES.remove(myRpcResponse.getRequestId());
         if (completableFuture != null) {
             completableFuture.complete(myRpcResponse);
         } else {

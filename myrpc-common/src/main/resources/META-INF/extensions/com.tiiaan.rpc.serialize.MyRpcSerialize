@@ -1,0 +1,3 @@
+KRYO=com.tiiaan.rpc.serialize.kryo.KryoSerialize
+HESSIAN=com.tiiaan.rpc.serialize.hessian.HessianSerialize
+JSON=com.tiiaan.rpc.serialize.json.JsonSerialize

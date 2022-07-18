@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 @Component
 public class HelloController {
 
-    @MyReference
+    @MyReference(version = "1.0")
     private HelloService helloService;
 
     public void test() {
