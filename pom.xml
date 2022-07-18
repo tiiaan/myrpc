@@ -20,6 +20,7 @@
         <module>myrpc-codec</module>
         <module>myrpc-registry</module>
         <module>myrpc-loadbalancer</module>
+        <module>myrpc-spring</module>
     </modules>
 
     <properties>

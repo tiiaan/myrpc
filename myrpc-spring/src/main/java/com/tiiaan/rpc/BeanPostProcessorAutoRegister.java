@@ -1,4 +1,4 @@
-package com.tiiaan.rpc.spring;
+package com.tiiaan.rpc;
 
 import com.tiiaan.rpc.annotation.MyService;
 import com.tiiaan.rpc.entity.MyRpcService;

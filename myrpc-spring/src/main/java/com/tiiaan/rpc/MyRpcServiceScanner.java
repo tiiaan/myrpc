@@ -1,6 +1,6 @@
-package com.tiiaan.rpc.spring;
+package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.annotation.EnableMyServiceScan;
+import com.tiiaan.rpc.annotation.EnableMyRpcScanner;
 import com.tiiaan.rpc.annotation.MyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -33,7 +33,7 @@ public class MyRpcServiceScanner implements ImportBeanDefinitionRegistrar, Resou
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes annotationAttributes =
                 AnnotationAttributes.fromMap(
-                        importingClassMetadata.getAnnotationAttributes(EnableMyServiceScan.class.getName()));
+                        importingClassMetadata.getAnnotationAttributes(EnableMyRpcScanner.class.getName()));
         String[] basePackages = new String[0];
         if (annotationAttributes != null) {
             basePackages = annotationAttributes.getStringArray(BASE_PACKAGE_ATTRIBUTE_NAME);

@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>myrpc-core</artifactId>
+    <artifactId>myrpc-spring</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -20,22 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>com.tiiaan.rpc</groupId>
-            <artifactId>myrpc-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tiiaan.rpc</groupId>
             <artifactId>myrpc-server</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.tiiaan.rpc</groupId>
             <artifactId>myrpc-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.tiiaan.rpc</groupId>
-            <artifactId>myrpc-spring</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

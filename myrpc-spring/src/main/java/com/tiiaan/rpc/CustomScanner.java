@@ -1,4 +1,4 @@
-package com.tiiaan.rpc.spring;
+package com.tiiaan.rpc;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
