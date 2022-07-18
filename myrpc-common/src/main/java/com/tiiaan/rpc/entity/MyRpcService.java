@@ -2,6 +2,10 @@ package com.tiiaan.rpc.entity;
 
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.exception.MyRpcException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -9,6 +13,8 @@ import com.tiiaan.rpc.exception.MyRpcException;
  * description
  */
 
+@Data
+@Builder
 public class MyRpcService {
 
     private Object service;
@@ -27,22 +33,6 @@ public class MyRpcService {
 
     public MyRpcService(Object service, String version) {
         this.version = version;
-        this.service = service;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public Object getService() {
-        return service;
-    }
-
-    public void setService(Object service) {
         this.service = service;
     }
 

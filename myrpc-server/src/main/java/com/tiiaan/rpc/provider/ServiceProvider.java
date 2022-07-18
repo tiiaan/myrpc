@@ -15,7 +15,7 @@ public interface ServiceProvider {
 
     public Object getService(String serviceFullName);
 
-    public void publishService(Object service, Integer port);
-    public void publishService(MyRpcService myRpcService, Integer port);
+    public void publishService(Object service);
+    public void publishService(MyRpcService myRpcService);
 
 }

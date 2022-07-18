@@ -34,8 +34,7 @@ public class SocketRpcServer extends AbstractRpcServer {
     private final ServiceProvider serviceProvider = new ServiceProviderImpl();
 
 
-    public SocketRpcServer(Integer port) {
-        this.port = port;
+    public SocketRpcServer() {
         this.myRpcRequestHandler = new MyRpcRequestHandler();
         threadPool = ThreadPoolFactory.createThreadPoolIfAbsent("socket-rpc-server");
         ThreadPoolFactory.monitorThreadPoolStatus((ThreadPoolExecutor) threadPool);
@@ -46,6 +45,7 @@ public class SocketRpcServer extends AbstractRpcServer {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket();) {
             String host = InetAddress.getLocalHost().getHostAddress();
+            int port = AbstractRpcServer.PORT;
             serverSocket.bind(new InetSocketAddress(host, port));
             log.info("服务端 {}:{} 已启动, 等待客户端连接...", host, port);
             Socket socket;
@@ -69,7 +69,6 @@ public class SocketRpcServer extends AbstractRpcServer {
 
     @Override
     public void register(Object service, String version) {
-        //serviceProvider.publishService(service, port);
-        serviceProvider.publishService(new MyRpcService(service, version), port);
+        serviceProvider.publishService(new MyRpcService(service, version));
     }
 }

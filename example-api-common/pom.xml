@@ -17,12 +17,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- <dependencies> -->
-    <!--     <dependency> -->
-    <!--         <groupId>com.tiiaan.rpc</groupId> -->
-    <!--         <artifactId>myrpc-core</artifactId> -->
-    <!--         <version>1.0-SNAPSHOT</version> -->
-    <!--     </dependency> -->
-    <!-- </dependencies> -->
+    <dependencies>
+        <dependency>
+            <groupId>com.tiiaan.rpc</groupId>
+            <artifactId>myrpc-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

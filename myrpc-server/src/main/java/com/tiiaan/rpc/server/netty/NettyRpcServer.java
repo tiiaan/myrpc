@@ -1,6 +1,7 @@
 package com.tiiaan.rpc.server.netty;
 
 import com.tiiaan.rpc.entity.MyRpcService;
+import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.server.AbstractRpcServer;
 import com.tiiaan.rpc.MyRpcDecoder;
 import com.tiiaan.rpc.MyRpcEncoder;
@@ -11,6 +12,7 @@ import com.tiiaan.rpc.kryo.KryoSerializer;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
 import com.tiiaan.rpc.hook.MyRpcServerShutDownHook;
+import com.tiiaan.rpc.server.MyRpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -33,11 +35,10 @@ import lombok.extern.slf4j.Slf4j;
 public class NettyRpcServer extends AbstractRpcServer {
 
 
-    private final ServiceProvider serviceProvider = new ServiceProviderImpl();
+    private final ServiceProvider serviceProvider;
 
-
-    public NettyRpcServer(Integer port) {
-        super(port);
+    public NettyRpcServer() {
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
 
@@ -64,7 +65,7 @@ public class NettyRpcServer extends AbstractRpcServer {
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
-            ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
             //优雅关闭钩子
             MyRpcServerShutDownHook.getShutDownHook().start();
             channelFuture.channel().closeFuture().sync();
@@ -81,8 +82,7 @@ public class NettyRpcServer extends AbstractRpcServer {
 
     @Override
     public void register(Object service, String version) {
-        //serviceProvider.publishService(service, port);
-        serviceProvider.publishService(new MyRpcService(service, version), port);
+        serviceProvider.publishService(new MyRpcService(service, version));
     }
 
 }

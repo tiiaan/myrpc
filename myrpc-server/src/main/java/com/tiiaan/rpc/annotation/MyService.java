@@ -1,3 +1,4 @@
+
 package com.tiiaan.rpc.annotation;
 
 import java.lang.annotation.*;
@@ -12,9 +13,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface MyReference {
+public @interface MyService {
 
-    String name() default "";
     String version() default "";
 
 }

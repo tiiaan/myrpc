@@ -6,6 +6,7 @@ import com.tiiaan.rpc.entity.MyRpcService;
 import com.tiiaan.rpc.enums.MyRpcError;
 import com.tiiaan.rpc.enums.ResponseStatus;
 import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.factory.SingletonFactory;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
 import lombok.NoArgsConstructor;
@@ -21,14 +22,12 @@ import java.lang.reflect.Method;
  */
 
 @Slf4j
-@NoArgsConstructor
 public class MyRpcRequestHandler {
 
-    private static final ServiceProvider serviceProvider;
+    private final ServiceProvider serviceProvider;
 
-
-    static {
-        serviceProvider = new ServiceProviderImpl();
+    public MyRpcRequestHandler() {
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
 

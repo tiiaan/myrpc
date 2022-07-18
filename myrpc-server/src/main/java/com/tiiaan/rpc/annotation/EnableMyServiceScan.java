@@ -1,5 +1,8 @@
 package com.tiiaan.rpc.annotation;
 
+import com.tiiaan.rpc.spring.MyRpcServiceScanner;
+import org.springframework.context.annotation.Import;
+
 import java.lang.annotation.*;
 
 /**
@@ -12,5 +15,9 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
+@Import(MyRpcServiceScanner.class)
 public @interface EnableMyServiceScan {
+
+    String[] basePackage();
+
 }

@@ -3,7 +3,6 @@ package com.tiiaan.rpc.json;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiiaan.rpc.MyRpcSerializer;
-import com.tiiaan.rpc.entity.MyMessage;
 import com.tiiaan.rpc.entity.MyRpcRequest;
 import com.tiiaan.rpc.entity.MyRpcResponse;
 import com.tiiaan.rpc.enums.MyRpcError;
@@ -69,7 +68,7 @@ public class JsonSerializer implements MyRpcSerializer {
     private Object handleMyRpcResponse(Object obj) throws IOException {
         MyRpcResponse myRpcResponse = (MyRpcResponse) obj;
         byte[] bytes = objectMapper.writeValueAsBytes(myRpcResponse.getData());
-        myRpcResponse.setData(objectMapper.readValue(bytes, MyMessage.class));
+        //myRpcResponse.setData(objectMapper.readValue(bytes, MyMessage.class));
         return myRpcResponse;
     }
 
