@@ -1,10 +1,12 @@
 package com.tiiaan.rpc.server.socket;
 
-import com.tiiaan.rpc.entity.MyRpcService;
+import com.tiiaan.rpc.common.config.MyRpcServerProperties;
+import com.tiiaan.rpc.common.entity.MyRpcService;
+import com.tiiaan.rpc.common.factory.SingletonFactory;
 import com.tiiaan.rpc.server.AbstractRpcServer;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.exception.MyRpcException;
-import com.tiiaan.rpc.factory.ThreadPoolFactory;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
+import com.tiiaan.rpc.common.factory.ThreadPoolFactory;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
@@ -31,13 +33,16 @@ public class SocketRpcServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
     private final MyRpcRequestHandler myRpcRequestHandler;
-    private final ServiceProvider serviceProvider = new ServiceProviderImpl();
+    private final ServiceProvider serviceProvider;
+    private final MyRpcServerProperties myRpcServerProperties;
 
 
     public SocketRpcServer() {
         this.myRpcRequestHandler = new MyRpcRequestHandler();
         threadPool = ThreadPoolFactory.createThreadPoolIfAbsent("socket-rpc-server");
         ThreadPoolFactory.monitorThreadPoolStatus((ThreadPoolExecutor) threadPool);
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+        myRpcServerProperties = SingletonFactory.getInstance(MyRpcServerProperties.class);
     }
 
 
@@ -45,7 +50,7 @@ public class SocketRpcServer extends AbstractRpcServer {
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket();) {
             String host = InetAddress.getLocalHost().getHostAddress();
-            int port = AbstractRpcServer.PORT;
+            int port = myRpcServerProperties.getPort();
             serverSocket.bind(new InetSocketAddress(host, port));
             log.info("服务端 {}:{} 已启动, 等待客户端连接...", host, port);
             Socket socket;

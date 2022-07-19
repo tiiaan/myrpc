@@ -1,10 +1,10 @@
 package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.PackageType;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.enums.PackageType;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import com.tiiaan.rpc.serialize.MyRpcSerialize;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

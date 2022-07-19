@@ -1,6 +1,6 @@
 package com.tiiaan.rpc.netty;
 
-import com.tiiaan.rpc.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

@@ -1,8 +1,7 @@
 package com.tiiaan.rpc.util;
 
+import com.tiiaan.rpc.common.util.StringUtil;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class StringUtilTest {
 

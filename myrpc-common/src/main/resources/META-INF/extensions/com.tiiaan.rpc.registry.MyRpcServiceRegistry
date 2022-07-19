@@ -1,1 +1,1 @@
-NACOS=com.tiiaan.rpc.registry.nacos.NacosServiceRegistry
+nacos=com.tiiaan.rpc.registry.nacos.NacosServiceRegistry

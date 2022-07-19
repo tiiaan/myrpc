@@ -1,7 +1,7 @@
 package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.enums.PackageType;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.enums.PackageType;
 import com.tiiaan.rpc.serialize.MyRpcSerialize;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

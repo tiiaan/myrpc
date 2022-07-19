@@ -1,9 +1,7 @@
 package com.tiiaan.rpc.handler;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.provider.ServiceProvider;
-import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
 import io.netty.channel.*;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;

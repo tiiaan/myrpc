@@ -1,8 +1,7 @@
 package com.tiiaan.rpc.registry;
 
-import com.tiiaan.rpc.MySPI;
+import com.tiiaan.rpc.spi.MySPI;
 
-import java.net.InetSocketAddress;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -13,6 +12,8 @@ import java.net.InetSocketAddress;
 @MySPI
 public interface MyRpcServiceRegistry {
 
-    void register(String serviceName, InetSocketAddress inetSocketAddress);
+    void register(String serviceKey);
+    void unregister(String serviceKey);
+    void unregisterAll();
 
 }

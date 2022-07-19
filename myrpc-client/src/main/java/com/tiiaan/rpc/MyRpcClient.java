@@ -1,6 +1,6 @@
 package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com

@@ -1,6 +1,6 @@
 package com.tiiaan.rpc.serialize;
 
-import com.tiiaan.rpc.MySPI;
+import com.tiiaan.rpc.spi.MySPI;
 import com.tiiaan.rpc.serialize.hessian.HessianSerialize;
 import com.tiiaan.rpc.serialize.json.JsonSerialize;
 import com.tiiaan.rpc.serialize.kryo.KryoSerialize;

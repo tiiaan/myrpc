@@ -1,15 +1,15 @@
 package com.tiiaan.rpc.proxy;
 
 import com.tiiaan.rpc.MyRpcClient;
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.entity.MyRpcService;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.ResponseStatus;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.entity.MyRpcService;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.enums.ResponseStatus;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import com.tiiaan.rpc.netty.NettyRpcClient;
 import com.tiiaan.rpc.socket.SocketRpcClient;
-import com.tiiaan.rpc.util.StringUtil;
+import com.tiiaan.rpc.common.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;

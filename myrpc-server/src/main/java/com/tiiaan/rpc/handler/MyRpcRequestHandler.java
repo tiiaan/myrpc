@@ -1,15 +1,9 @@
 package com.tiiaan.rpc.handler;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.entity.MyRpcService;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.ResponseStatus;
-import com.tiiaan.rpc.exception.MyRpcException;
-import com.tiiaan.rpc.factory.SingletonFactory;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.factory.SingletonFactory;
 import com.tiiaan.rpc.provider.ServiceProvider;
 import com.tiiaan.rpc.provider.impl.ServiceProviderImpl;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;

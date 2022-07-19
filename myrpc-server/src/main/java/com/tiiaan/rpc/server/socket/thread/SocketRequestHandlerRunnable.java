@@ -1,10 +1,10 @@
 package com.tiiaan.rpc.server.socket.thread;
 
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.ResponseStatus;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.enums.ResponseStatus;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 
 /**

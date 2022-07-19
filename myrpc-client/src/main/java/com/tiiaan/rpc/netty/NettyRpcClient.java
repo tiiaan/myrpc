@@ -1,13 +1,14 @@
 package com.tiiaan.rpc.netty;
 
 import com.tiiaan.rpc.*;
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.factory.SingletonFactory;
+import com.tiiaan.rpc.common.constants.Constants;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.factory.SingletonFactory;
 import com.tiiaan.rpc.handler.NettyClientHandler;
 import com.tiiaan.rpc.registry.MyRpcServiceDiscovery;
 import com.tiiaan.rpc.serialize.kryo.KryoSerialize;
-import com.tiiaan.rpc.registry.nacos.NacosServiceDiscovery;
+import com.tiiaan.rpc.spi.ExtensionLoader;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -56,8 +57,7 @@ public class NettyRpcClient implements MyRpcClient {
                         pipeline.addLast(new NettyClientHandler());
                     }
                 });
-        //this.myRpcServiceDiscovery = SingletonFactory.getInstance(NacosServiceDiscovery.class);
-        myRpcServiceDiscovery = ExtensionLoader.getExtensionLoader(MyRpcServiceDiscovery.class).getExtension("NACOS");
+        myRpcServiceDiscovery = ExtensionLoader.getExtensionLoader(MyRpcServiceDiscovery.class).getExtension(Constants.DEFAULT_REGISTRY);
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.nettyChannel = SingletonFactory.getInstance(NettyChannel.class);
     }
@@ -67,7 +67,7 @@ public class NettyRpcClient implements MyRpcClient {
     public Object sendRequest(MyRpcRequest myRpcRequest) {
         CompletableFuture<MyRpcResponse<Object>> completableFuture = new CompletableFuture<>();
         try {
-            InetSocketAddress inetSocketAddress = myRpcServiceDiscovery.lookupService(myRpcRequest.getServiceFullName());
+            InetSocketAddress inetSocketAddress = myRpcServiceDiscovery.lookup(myRpcRequest.getServiceKey());
             Channel channel = getChannel(inetSocketAddress);
             if (channel.isActive()) {
                 unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);

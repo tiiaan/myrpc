@@ -1,11 +1,9 @@
 package com.tiiaan.rpc.service.impl;
 
-import com.tiiaan.rpc.annotation.MyService;
+import com.tiiaan.rpc.spring.annotation.MyService;
 import com.tiiaan.rpc.entity.MyMessage;
 import com.tiiaan.rpc.service.HelloService;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com

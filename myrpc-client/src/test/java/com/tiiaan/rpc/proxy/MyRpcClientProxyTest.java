@@ -1,13 +1,5 @@
 package com.tiiaan.rpc.proxy;
 
-import com.tiiaan.rpc.MyRpcClient;
-import com.tiiaan.rpc.entity.MyRpcService;
-import com.tiiaan.rpc.netty.NettyRpcClient;
-import com.tiiaan.rpc.socket.SocketRpcClient;
-import org.junit.Test;
-
-import java.util.concurrent.TimeUnit;
-
 
 public class MyRpcClientProxyTest {
 

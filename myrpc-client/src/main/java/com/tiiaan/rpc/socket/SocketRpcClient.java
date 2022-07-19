@@ -1,11 +1,9 @@
 package com.tiiaan.rpc.socket;
 
 import com.tiiaan.rpc.AbstractRpcClient;
-import com.tiiaan.rpc.MyRpcClient;
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.exception.MyRpcException;
-import lombok.Builder;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 

@@ -1,12 +1,13 @@
 package com.tiiaan.rpc.server.netty;
 
-import com.tiiaan.rpc.entity.MyRpcService;
-import com.tiiaan.rpc.factory.SingletonFactory;
+import com.tiiaan.rpc.common.config.MyRpcServerProperties;
+import com.tiiaan.rpc.common.entity.MyRpcService;
+import com.tiiaan.rpc.common.factory.SingletonFactory;
 import com.tiiaan.rpc.server.AbstractRpcServer;
 import com.tiiaan.rpc.MyRpcDecoder;
 import com.tiiaan.rpc.MyRpcEncoder;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import com.tiiaan.rpc.handler.NettyServerHandler;
 import com.tiiaan.rpc.serialize.kryo.KryoSerialize;
 import com.tiiaan.rpc.provider.ServiceProvider;
@@ -35,9 +36,12 @@ public class NettyRpcServer extends AbstractRpcServer {
 
 
     private final ServiceProvider serviceProvider;
+    private final MyRpcServerProperties myRpcServerProperties;
+
 
     public NettyRpcServer() {
         serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+        myRpcServerProperties = SingletonFactory.getInstance(MyRpcServerProperties.class);
     }
 
 
@@ -64,7 +68,7 @@ public class NettyRpcServer extends AbstractRpcServer {
                             pipeline.addLast(new NettyServerHandler());
                         }
                     });
-            ChannelFuture channelFuture = serverBootstrap.bind(PORT).sync();
+            ChannelFuture channelFuture = serverBootstrap.bind(myRpcServerProperties.getPort()).sync();
             //优雅关闭钩子
             MyRpcServerShutDownHook.getShutDownHook().start();
             channelFuture.channel().closeFuture().sync();

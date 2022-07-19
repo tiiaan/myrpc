@@ -1,6 +1,6 @@
 package com.tiiaan.rpc.registry;
 
-import com.tiiaan.rpc.MySPI;
+import com.tiiaan.rpc.spi.MySPI;
 
 import java.net.InetSocketAddress;
 
@@ -13,6 +13,8 @@ import java.net.InetSocketAddress;
 @MySPI
 public interface MyRpcServiceDiscovery {
 
-    InetSocketAddress lookupService(String serviceFullName);
+    InetSocketAddress lookup(String serviceKey);
+
+    void subscribe(String serviceKey);
 
 }

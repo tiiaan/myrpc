@@ -1,11 +1,10 @@
 package com.tiiaan.rpc.handler;
 
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.factory.SingletonFactory;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.factory.SingletonFactory;
 import com.tiiaan.rpc.netty.UnprocessedRequests;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 

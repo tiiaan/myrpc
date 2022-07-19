@@ -1,6 +1,6 @@
 package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.annotation.EnableMyRpcScanner;
+import com.tiiaan.rpc.spring.annotation.EnableMyRpcScanner;
 import com.tiiaan.rpc.server.netty.NettyRpcServer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

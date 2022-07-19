@@ -4,11 +4,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.tiiaan.rpc.serialize.MyRpcSerialize;
-import com.tiiaan.rpc.entity.MyRpcRequest;
-import com.tiiaan.rpc.entity.MyRpcResponse;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.SerializeType;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.entity.MyRpcRequest;
+import com.tiiaan.rpc.common.entity.MyRpcResponse;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;

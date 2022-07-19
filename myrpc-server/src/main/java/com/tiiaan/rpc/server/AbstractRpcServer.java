@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class AbstractRpcServer implements MyRpcServer {
 
-    public static final int PORT = 9000;
-
 }

@@ -1,7 +1,10 @@
 package com.tiiaan.rpc.hook;
 
-import com.tiiaan.rpc.factory.ThreadPoolFactory;
+import com.tiiaan.rpc.common.constants.Constants;
+import com.tiiaan.rpc.common.factory.ThreadPoolFactory;
+import com.tiiaan.rpc.registry.MyRpcServiceRegistry;
 import com.tiiaan.rpc.registry.nacos.NacosUtil;
+import com.tiiaan.rpc.spi.ExtensionLoader;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -13,9 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MyRpcServerShutDownHook {
 
+    private final MyRpcServiceRegistry myRpcServiceRegistry;
+
     private static final MyRpcServerShutDownHook instance = new MyRpcServerShutDownHook();
 
+
     private MyRpcServerShutDownHook() {
+        myRpcServiceRegistry = ExtensionLoader.getExtensionLoader(MyRpcServiceRegistry.class).getExtension(Constants.DEFAULT_REGISTRY);
     }
 
     public static MyRpcServerShutDownHook getShutDownHook() {
@@ -26,7 +33,7 @@ public class MyRpcServerShutDownHook {
         log.info("hook start");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("shutdown hook");
-            NacosUtil.deregisterAllInstances();
+            myRpcServiceRegistry.unregisterAll();
             ThreadPoolFactory.shutDownAllThreadPools();
         }));
     }

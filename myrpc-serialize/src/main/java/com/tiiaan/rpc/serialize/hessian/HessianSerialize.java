@@ -3,9 +3,8 @@ package com.tiiaan.rpc.serialize.hessian;
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 import com.tiiaan.rpc.serialize.MyRpcSerialize;
-import com.tiiaan.rpc.enums.MyRpcError;
-import com.tiiaan.rpc.enums.SerializeType;
-import com.tiiaan.rpc.exception.MyRpcException;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;

@@ -22,7 +22,6 @@ public class RoundRobinLoadBalance extends AbstractLoadBalance {
             current = this.atomicInteger.get();
             next = current == Integer.MAX_VALUE ? 0 : current + 1;
         } while (!atomicInteger.compareAndSet(current, next));
-        System.out.println("next=" + next);
         return next;
     }
 

@@ -1,12 +1,7 @@
 package com.tiiaan.rpc;
 
-import com.tiiaan.rpc.annotation.EnableMyRpcScanner;
+import com.tiiaan.rpc.spring.annotation.EnableMyRpcScanner;
 import com.tiiaan.rpc.controller.HelloController;
-import com.tiiaan.rpc.entity.MyMessage;
-import com.tiiaan.rpc.entity.MyRpcService;
-import com.tiiaan.rpc.netty.NettyRpcClient;
-import com.tiiaan.rpc.proxy.MyRpcClientProxy;
-import com.tiiaan.rpc.service.HelloService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.concurrent.TimeUnit;
@@ -23,8 +18,12 @@ public class ExampleClient {
 
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(ExampleClient.class);
         HelloController helloController = (HelloController) applicationContext.getBean("helloController");
-        for (int i = 0; i < 10; i++) {
+        long start = 0L, end = 0L;
+        for (int i = 0; i < 1000; i++) {
+            start = System.currentTimeMillis();
             helloController.test();
+            end = System.currentTimeMillis();
+            System.out.println("time elapsed " + (end - start) + " ms");
             try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
