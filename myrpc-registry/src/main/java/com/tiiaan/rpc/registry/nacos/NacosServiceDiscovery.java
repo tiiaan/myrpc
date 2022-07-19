@@ -29,6 +29,7 @@ import java.util.Set;
 @Slf4j
 public class NacosServiceDiscovery extends AbstractServiceDiscovery {
 
+
     private final NamingService namingService;
     private final MyRpcClientProperties myRpcClientProperties;
 
@@ -51,7 +52,7 @@ public class NacosServiceDiscovery extends AbstractServiceDiscovery {
         try {
             instances = namingService.getAllInstances(serviceKey);
         } catch (NacosException e) {
-            log.error("服务未注册 [{}]", serviceKey, e);
+            log.error("服务发现失败 [{}]", serviceKey, e);
             throw new MyRpcException(MyRpcError.SERVICE_DISCOVERY_FAILURE);
         }
         List<String> candidates = new ArrayList<>();
@@ -71,9 +72,9 @@ public class NacosServiceDiscovery extends AbstractServiceDiscovery {
         try {
             namingService.subscribe(serviceKey, event -> {
                 if (event instanceof NamingEvent) {
+                    log.info("监听到节点变化 [{}]", serviceKey);
                     NamingEvent namingEvent = (NamingEvent) event;
                     List<Instance> instances = namingEvent.getInstances();
-                    //instances.forEach(System.out::println);
                     super.resetNotified(serviceKey, getCandidateSet(instances));
                 }
             });

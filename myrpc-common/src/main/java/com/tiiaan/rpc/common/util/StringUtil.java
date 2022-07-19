@@ -24,6 +24,9 @@ public class StringUtil {
     }
 
     public static InetSocketAddress buildAddr(String address) {
+        if (address == null) {
+            return null;
+        }
         int index = address.lastIndexOf(':');
         String host;
         int port = 0;

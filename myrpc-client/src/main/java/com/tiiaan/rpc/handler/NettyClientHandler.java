@@ -23,11 +23,12 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<MyRpcRespons
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
     }
 
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MyRpcResponse msg) throws Exception {
         try {
-            log.info("客户端收到调用结果 {}", msg);
             unprocessedRequests.complete(msg);
+            log.info("接收响应 [{}]", msg.getRequestId());
         } finally {
             ReferenceCountUtil.release(msg);
         }
@@ -37,8 +38,9 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<MyRpcRespons
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.error("处理过程中发现异常", cause);
-        cause.printStackTrace();
+        //cause.printStackTrace();
         ctx.close();
+        //throw new Exception()
     }
 
 }

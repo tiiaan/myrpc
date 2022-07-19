@@ -41,6 +41,8 @@ public class MyRpcClientProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        log.info("发起服务调用 **************************************************");
+        long start = System.currentTimeMillis();
         //1.构造请求
         MyRpcRequest myRpcRequest = new MyRpcRequest().builder()
                 .requestId(StringUtil.getUUID())
@@ -66,23 +68,24 @@ public class MyRpcClientProxy implements InvocationHandler {
             myRpcResponse = (MyRpcResponse<Object>) myRpcClient.sendRequest(myRpcRequest);
         }
         check(myRpcRequest, myRpcResponse);
+        long end = System.currentTimeMillis();
+        log.info("服务调用结束 [{}ms] *********************************************", (end - start));
         return myRpcResponse.getData();
     }
 
 
     public void check(MyRpcRequest myRpcRequest, MyRpcResponse<Object> myRpcResponse) {
-
         if (myRpcResponse == null ||
                 myRpcResponse.getStatusCode() == null ||
                 !myRpcResponse.getStatusCode().equals(ResponseStatus.SUCCESS.getCode())) {
             log.error("服务调用失败");
             throw new MyRpcException(MyRpcError.SERVICE_INVOCATION_FAILURE, "interface=" + myRpcRequest.getInterfaceName());
         }
-
         if (!myRpcRequest.getRequestId().equals(myRpcResponse.getRequestId())) {
             log.error("请求号不匹配");
             throw new MyRpcException(MyRpcError.RESPONSE_NOT_MATCH, "interface=" + myRpcRequest.getInterfaceName());
         }
+        log.info("校验通过 [{}]", myRpcRequest.getRequestId());
     }
 
 }

@@ -1,13 +1,17 @@
 package com.tiiaan.rpc.registry;
 
 import com.tiiaan.rpc.common.constants.Constants;
+import com.tiiaan.rpc.common.enums.MyRpcError;
+import com.tiiaan.rpc.common.exception.MyRpcException;
 import com.tiiaan.rpc.common.util.StringUtil;
 import com.tiiaan.rpc.loadbalance.MyRpcLoadBalance;
 import com.tiiaan.rpc.spi.ExtensionLoader;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -15,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * description
  */
 
+@Slf4j
 public abstract class AbstractServiceDiscovery implements MyRpcServiceDiscovery {
 
     private static final Map<String, Set<String>> notified = new ConcurrentHashMap<>();
@@ -31,6 +36,7 @@ public abstract class AbstractServiceDiscovery implements MyRpcServiceDiscovery 
     public InetSocketAddress lookup(String serviceKey) {
         List<String> candidates = lookupNotified(serviceKey);
         String selected = myRpcLoadBalance.select(candidates);
+        log.info("命中节点 [{}]", selected);
         return StringUtil.buildAddr(selected);
     }
 
@@ -58,6 +64,7 @@ public abstract class AbstractServiceDiscovery implements MyRpcServiceDiscovery 
     public void resetNotified(String serviceKey, Set<String> candidates) {
         notified.remove(serviceKey);
         notified.putIfAbsent(serviceKey, candidates);
+        log.info("更新节点缓存 [{}]", serviceKey);
     }
 
 

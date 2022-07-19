@@ -35,7 +35,9 @@ public enum MyRpcError {
     SERVICE_NOT_IMPLEMENT_ANY_INTERFACE("注册的服务未实现接口"),
 
     IO_ERROR("IO操作异常"),
-    REQUEST_FAILURE("请求发送失败");
+    REQUEST_FAILURE("请求发送失败"),
+    NODE_NOT_FOUND("找不到可用服务节点"),
+    NODE_EXPIRED("服务节点已过期");
 
     private final String message;
 

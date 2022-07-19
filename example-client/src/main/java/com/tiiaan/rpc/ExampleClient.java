@@ -20,11 +20,8 @@ public class ExampleClient {
         HelloController helloController = (HelloController) applicationContext.getBean("helloController");
         long start = 0L, end = 0L;
         for (int i = 0; i < 1000; i++) {
-            start = System.currentTimeMillis();
             helloController.test();
-            end = System.currentTimeMillis();
-            System.out.println("time elapsed " + (end - start) + " ms");
-            try { TimeUnit.SECONDS.sleep(1); } catch (InterruptedException e) { e.printStackTrace(); }
+            try { TimeUnit.MILLISECONDS.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
         }
     }
 }
