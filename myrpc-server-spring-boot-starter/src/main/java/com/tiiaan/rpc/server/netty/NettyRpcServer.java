@@ -33,8 +33,8 @@ import javax.annotation.Resource;
 @Slf4j
 public class NettyRpcServer extends AbstractRpcServer {
 
-    @Resource
-    private NettyRpcServerHandler nettyRpcServerHandler;
+    //@Resource
+    //private NettyRpcServerHandler nettyRpcServerHandler;
     @Resource
     private ServiceHolder serviceHolder;
 

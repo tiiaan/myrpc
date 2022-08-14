@@ -1,6 +1,7 @@
 package com.tiiaan.rpc.config;
 
 
+import com.tiiaan.rpc.bean.ApplicationContextUtils;
 import com.tiiaan.rpc.bean.MyRpcClientProxyBeanPostProcessor;
 import com.tiiaan.rpc.client.MyRpcClient;
 import com.tiiaan.rpc.client.netty.ChannelProvider;
@@ -31,6 +32,12 @@ public class MyRpcClientAutoConfiguration {
 
     @Resource
     MyRpcClientProperties myRpcClientProperties;
+
+
+    @Bean
+    public ApplicationContextUtils applicationContextUtils() {
+        return new ApplicationContextUtils();
+    }
 
 
     @Bean

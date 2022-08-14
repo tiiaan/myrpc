@@ -1,5 +1,6 @@
 package com.tiiaan.rpc.client.netty;
 
+import com.tiiaan.rpc.bean.ApplicationContextUtils;
 import com.tiiaan.rpc.client.MyRpcClient;
 import com.tiiaan.rpc.codec.MyRpcDecoder;
 import com.tiiaan.rpc.codec.MyRpcEncoder;
@@ -59,7 +60,7 @@ public class NettyRpcClient implements MyRpcClient {
                         //pipeline.addLast(new MyRpcEncoder(new JsonSerializer()));
                         pipeline.addLast(new MyRpcEncoder(new KryoSerialize()));
                         //pipeline.addLast(new MyRpcEncoder(new HessianSerializer()));
-                        pipeline.addLast(new NettyRpcClientHandler());
+                        pipeline.addLast(ApplicationContextUtils.autowire(new NettyRpcClientHandler()));
                     }
                 });
         //myRpcServiceDiscovery = ExtensionLoader.getExtensionLoader(MyRpcServiceDiscovery.class).getExtension(Constants.DEFAULT_REGISTRY);
