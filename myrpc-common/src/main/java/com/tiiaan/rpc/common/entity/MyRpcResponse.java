@@ -1,7 +1,8 @@
 package com.tiiaan.rpc.common.entity;
 
 import com.tiiaan.rpc.common.enums.ResponseStatus;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 

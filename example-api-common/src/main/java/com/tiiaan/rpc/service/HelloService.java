@@ -10,6 +10,6 @@ import com.tiiaan.rpc.entity.MyMessage;
 
 public interface HelloService {
 
-    MyMessage hello(MyMessage myMessage);
+    String hello(String message);
 
 }

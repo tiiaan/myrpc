@@ -1,2 +1,2 @@
 random=com.tiiaan.rpc.loadbalance.random.RandomLoadBalance
-roundrobin=com.tiiaan.rpc.loadbalance.round.RoundRobinLoadBalance
+roundrobin=com.tiiaan.rpc.loadbalance.roundrobin.RoundRobinLoadBalance

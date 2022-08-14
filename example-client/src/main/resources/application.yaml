@@ -1,0 +1,6 @@
+server:
+  port: 8080
+myrpc:
+  client:
+    address: 127.0.0.1:8848
+

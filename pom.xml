@@ -7,22 +7,6 @@
     <groupId>com.tiiaan.rpc</groupId>
     <artifactId>myrpc</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
-    <modules>
-        <module>example-api-common</module>
-        <module>example-server</module>
-        <module>example-client</module>
-        <module>myrpc-common</module>
-        <module>myrpc-server</module>
-        <module>myrpc-client</module>
-        <module>myrpc-core</module>
-        <module>myrpc-serialize</module>
-        <module>myrpc-codec</module>
-        <module>myrpc-registry</module>
-        <module>myrpc-loadbalance</module>
-        <module>myrpc-spring</module>
-        <module>myrpc-spi</module>
-    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

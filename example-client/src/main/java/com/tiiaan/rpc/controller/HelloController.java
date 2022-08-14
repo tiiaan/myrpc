@@ -1,9 +1,11 @@
 package com.tiiaan.rpc.controller;
 
-import com.tiiaan.rpc.spring.annotation.MyReference;
-import com.tiiaan.rpc.entity.MyMessage;
+import com.tiiaan.rpc.annotation.MyReference;
 import com.tiiaan.rpc.service.HelloService;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
@@ -11,15 +13,19 @@ import org.springframework.stereotype.Component;
  * description
  */
 
-@Component
+@Slf4j
+@RestController
 public class HelloController {
 
-    @MyReference(version = "1.0")
+
+    @MyReference(version = "0.0")
     private HelloService helloService;
 
-    public void test() {
-        MyMessage hello = this.helloService.hello(new MyMessage("hello world!"));
-        System.out.println(hello);
+
+    @GetMapping("/hello")
+    public String hello() {
+        log.info("message");
+        return helloService.hello("hello");
     }
 
 }
