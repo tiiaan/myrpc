@@ -1,5 +1,6 @@
 package com.tiiaan.rpc.config;
 
+import com.tiiaan.rpc.bean.ApplicationContextUtils;
 import com.tiiaan.rpc.bean.MyRpcServerRegisterBeanPostProcessor;
 import com.tiiaan.rpc.handler.MyRpcRequestHandler;
 import com.tiiaan.rpc.holder.ServiceHolder;
@@ -31,6 +32,13 @@ public class MyRpcServerAutoConfiguration {
 
     @Resource
     MyRpcServerProperties myRpcServerProperties;
+
+
+    @Bean
+    public ApplicationContextUtils applicationContextUtils() {
+        return new ApplicationContextUtils();
+    }
+
 
 
     @Bean
@@ -96,5 +104,6 @@ public class MyRpcServerAutoConfiguration {
         log.info("...myRpcServiceRegistry");
         return new NacosServiceRegistry(myRpcServerProperties.getPort(), myRpcServerProperties.getAddress());
     }
+
 
 }

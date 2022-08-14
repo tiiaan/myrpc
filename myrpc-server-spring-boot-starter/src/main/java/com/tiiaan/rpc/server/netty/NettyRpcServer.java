@@ -1,5 +1,6 @@
 package com.tiiaan.rpc.server.netty;
 
+import com.tiiaan.rpc.bean.ApplicationContextUtils;
 import com.tiiaan.rpc.codec.MyRpcDecoder;
 import com.tiiaan.rpc.codec.MyRpcEncoder;
 import com.tiiaan.rpc.common.entity.MyRpcService;
@@ -32,9 +33,11 @@ import javax.annotation.Resource;
 @Slf4j
 public class NettyRpcServer extends AbstractRpcServer {
 
-
+    @Resource
+    private NettyRpcServerHandler nettyRpcServerHandler;
     @Resource
     private ServiceHolder serviceHolder;
+
     private Integer port;
 
     public void setPort(Integer port) {
@@ -70,7 +73,7 @@ public class NettyRpcServer extends AbstractRpcServer {
                             pipeline.addLast(new MyRpcEncoder(new KryoSerialize()));
                             //pipeline.addLast(new MyRpcEncoder(new HessianSerializer()));
                             pipeline.addLast(new MyRpcDecoder());
-                            pipeline.addLast(new NettyRpcServerHandler());
+                            pipeline.addLast(ApplicationContextUtils.autowire(new NettyRpcServerHandler()));
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();

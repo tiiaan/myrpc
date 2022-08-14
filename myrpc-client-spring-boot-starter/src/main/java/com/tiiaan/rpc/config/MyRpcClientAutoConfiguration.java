@@ -15,8 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 
 import javax.annotation.Resource;
 
@@ -36,7 +34,6 @@ public class MyRpcClientAutoConfiguration {
 
 
     @Bean
-    //@ConditionalOnBean(MyRpcClientProperties.class)
     @ConditionalOnMissingBean(MyRpcServiceDiscovery.class)
     public MyRpcServiceDiscovery myRpcServiceDiscovery() {
         log.info("...myRpcServiceDiscovery");
@@ -72,8 +69,8 @@ public class MyRpcClientAutoConfiguration {
     @Bean
     @ConditionalOnBean({MyRpcServiceDiscovery.class, UnprocessedRequests.class, ChannelProvider.class})
     @ConditionalOnMissingBean(MyRpcClient.class)
-    public MyRpcClient nettyRpcClient() {
-        log.info("...nettyRpcClient");
+    public MyRpcClient myRpcClient() {
+        log.info("...myRpcClient");
         return new NettyRpcClient();
     }
 

@@ -1,8 +1,6 @@
 package com.tiiaan.rpc.registry;
 
 
-import com.tiiaan.rpc.common.spi.MySPI;
-
 /**
  * @author tiiaan Email:tiiaan.w@gmail.com
  * @version 0.0

@@ -3,7 +3,7 @@ package com.tiiaan.rpc.bean;
 import com.tiiaan.rpc.annotation.MyService;
 import com.tiiaan.rpc.common.entity.MyRpcService;
 import com.tiiaan.rpc.holder.ServiceHolder;
-import com.tiiaan.rpc.server.netty.NettyRpcServer;
+import com.tiiaan.rpc.server.MyRpcServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -25,7 +25,7 @@ public class MyRpcServerRegisterBeanPostProcessor implements BeanPostProcessor, 
     @Resource
     private ServiceHolder serviceHolder;
     @Resource
-    private NettyRpcServer nettyRpcServer;
+    private MyRpcServer nettyRpcServer;
 
     //public RegisterBeanPostProcessor() {
     //    serviceHolder = SingletonFactory.getInstance(ServiceHolder.class);

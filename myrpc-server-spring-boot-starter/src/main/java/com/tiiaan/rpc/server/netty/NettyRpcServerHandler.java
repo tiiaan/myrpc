@@ -36,9 +36,11 @@ public class NettyRpcServerHandler extends SimpleChannelInboundHandler<MyRpcRequ
             ChannelFuture channelFuture = ctx.writeAndFlush(MyRpcResponse.success(returnObject, msg.getRequestId()));
             channelFuture.addListener(ChannelFutureListener.CLOSE);
         } catch (Exception e) {
+            log.error("", e);
             ReferenceCountUtil.release(msg);
         }
     }
+
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {

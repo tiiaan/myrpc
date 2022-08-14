@@ -1,7 +1,5 @@
 package com.tiiaan.rpc.registry;
 
-import com.tiiaan.rpc.common.spi.MySPI;
-
 import java.net.InetSocketAddress;
 
 /**

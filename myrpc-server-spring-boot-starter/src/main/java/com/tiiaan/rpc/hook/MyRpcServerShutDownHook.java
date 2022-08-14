@@ -1,8 +1,6 @@
 package com.tiiaan.rpc.hook;
 
-import com.tiiaan.rpc.common.constants.Constants;
 import com.tiiaan.rpc.common.factory.ThreadPoolFactory;
-import com.tiiaan.rpc.common.spi.ExtensionLoader;
 import com.tiiaan.rpc.registry.MyRpcServiceRegistry;
 import lombok.extern.slf4j.Slf4j;
 

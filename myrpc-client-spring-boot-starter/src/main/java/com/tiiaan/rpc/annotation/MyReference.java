@@ -1,7 +1,5 @@
 package com.tiiaan.rpc.annotation;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.lang.annotation.*;
 
 /**
