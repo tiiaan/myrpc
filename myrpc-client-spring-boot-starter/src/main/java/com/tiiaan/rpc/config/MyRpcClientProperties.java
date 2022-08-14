@@ -15,6 +15,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("myrpc.client")
 public class MyRpcClientProperties {
 
-    private String address = "127.0.0.1:8848";
+    private String address;
 
 }

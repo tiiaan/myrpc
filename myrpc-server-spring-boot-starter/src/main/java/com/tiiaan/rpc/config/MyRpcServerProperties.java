@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("myrpc.server")
 public class MyRpcServerProperties {
 
-    private Integer port = 9000;
-    private String address = "127.0.0.1:8848";
+    private Integer port;
+    private String address;
 
 }
