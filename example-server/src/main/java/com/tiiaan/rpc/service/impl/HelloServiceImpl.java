@@ -11,10 +11,8 @@ import com.tiiaan.rpc.service.HelloService;
 
 @MyService(version = "0.0")
 public class HelloServiceImpl implements HelloService {
-
     @Override
     public String hello(String message) {
-        return "HELLO:" + message;
+        return "myrpc: " + message;
     }
-
 }

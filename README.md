@@ -1,17 +1,75 @@
 # myrpc (a toy rpc framework)
 
-## 特性
+### 特性
 
-## 棘手的点
-
-
-## 如何发送请求？
+### 棘手的点
 
 
-## 如何获取响应结果？
-使用 CompletableFuture 接收响应结果。但是由于服务消费方会并发调用多个服务，一段时间后，消费方线程池会收到多个响应对象。此时要考虑一个问题，如何将每个响应对象传递给相应的 Future 且不出错？
+### 使用方法
 
-我采用的解决方案是，为每个请求生成唯一 ID 添加到请求头中，然后将「ID-Future」以键值对的形式保存到 Map；服务提供端收到请求后将 ID 从请求头中提取出来，放到响应头里随着结果带回去。
+引入 SpringBoot Starter 场景依赖
+```xml
+<!-- 提供端 -->
+<dependency>
+  <groupId>com.tiiaan.rpc</groupId>
+  <artifactId>myrpc-server-spring-boot-starter</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+</dependency>
+
+<!-- 消费端 -->
+<dependency>
+    <groupId>com.tiiaan.rpc</groupId>
+    <artifactId>myrpc-client-spring-boot-starter</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
+
+修改 YAML 配置文件，以提供端为例
+```yaml
+myrpc:
+  server:
+    port: 9000 # RPC 通信端口号
+    address: 127.0.0.1:8848 # Nacos 注册中心地址
+```
+
+提供端使用 `@MyService(version = "0.1")` 注解暴露服务
+```java
+@MyService(version = "0.1")
+public class HelloServiceImpl implements HelloService {
+    @Override
+    public String hello(String message) {
+        return "myrpc: " + message;
+    }
+}
+```
+
+消费端使用 `@MyReference(version = "0.1")` 注解注入服务引用
+```java
+@RestController
+public class HelloController {
+    
+    @MyReference(version = "0.1")
+    private HelloService helloService;
+    
+    @GetMapping("/hello")
+    public String hello() {
+        return helloService.hello("Hello World!");
+    }
+}
+```
+
+
+### 项目结构
+
+
+
+### 如何发送请求？
+
+
+### 如何获取响应结果？
+使用 CompletableFuture 接收响应结果。但是由于服务消费方会并发调用多个服务，一段时间后，消费方线程池会收到多个响应对象。此时要考虑一个问题，如何将每个响应对象传递给相应的 Future 且不出错？ 
+
+我的解决方案是为每个请求生成唯一 ID 添加到请求头中，然后将「ID-Future」以键值对的形式保存到 Map。
 
 ```java
 Map<String, CompletableFuture<MyRpcResponse<Object>>> FUTURES = new ConcurrentHashMap<>();
@@ -36,17 +94,23 @@ public void complete(MyRpcResponse<Object> myRpcResponse) {
 
 
 
-## 负载均衡
-### 1. 一致性哈希解决什么问题？
-在一些场景中，我们对负载均衡往往有2个期望：
-- 期望请求尽可能均匀、分散地打到不同的节点上
-- 期望相同的请求尽可能打到相同的节点上，以便于充分利用本地缓存
+### @MyService 注解实现原理
 
-哈希取余 `hash(id)%N` 看似完美匹配这两点需求，但是，假设我们因为业务扩张新增一个节点，`hash(id)%(N+1)` 的结果极大可能跟原先相去甚远，从而导致所有节点上的本地缓存全部扑空，引发缓存颠簸甚至雪崩。
 
-对此，一致性哈希，平滑迁移
 
-### 2. 如何用 CAS 解决多线程轮询？
+### @MyReference 注解实现原理
+
+
+
+
+### 负载均衡
+**一致性哈希解决什么问题？**
+
+在一些场景中，我们对负载均衡往往有2个期望：(1)期望请求尽可能均匀、分散地打到不同的节点上；(2)期望相同的请求尽可能打到相同的节点上，以便于充分利用本地缓存。
+
+哈希取余 `hash(id)%N` 看似完美匹配这两点需求，但假设因为业务扩张新增一个节点，`hash(id)%(N+1)` 的结果极大可能跟原先相去甚远，导致所有节点上的本地缓存全部扑空。对此，一致性哈希，平滑迁移
+
+**如何用 CAS 解决多线程轮询？**
 ```java
 private AtomicInteger atomicInteger = new AtomicInteger(0);
 
@@ -68,19 +132,21 @@ protected <T> T doSelect(List<T> candidates) {
 
 
 
-## 服务缓存
-### 1. 服务缓存解决什么问题？
+### 服务缓存
+**服务缓存解决什么问题？**
+
 1. 避免每次消费服务都要去注册中心拉取节点列表
 2. 避免注册中心闪断导致服务不可用
 
-### 2. 服务缓存带来什么问题？
+**服务缓存带来什么问题？**
+
 1. 如果某个服务节点不可用或下线，如何及时摘除节点？
 2. 新上线的服务节点如何及时收到流量？
 3. 如果调用方拿到的节点不是最新的(比如在命中缓存之后、发起请求之前，节点下线了)，如何处理？
 
 
-## SPI
-### 参考
+
+### SPI
 - [官方文档 | Dubbo2 SPI 源代码分析 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/source/dubbo-spi/)
 - [官方文档 | Dubbo2 SPI 自适应拓展 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/source/adaptive-extension/)
 - [官方文档 | SPI 扩展实现 | Apache Dubbo](https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/impls/)
@@ -88,11 +154,11 @@ protected <T> T doSelect(List<T> candidates) {
 
 
 
-## 可拓展协议
+### 可拓展协议
 
 
 
-## 注解
+
 
 
 
