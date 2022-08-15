@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class NettyRpcClientHandler extends SimpleChannelInboundHandler<MyRpcResponse> {
 
     @Resource
-    private UnprocessedRequests unprocessedRequests;
+    private FuturesHolder futuresHolder;
 
     //public NettyRpcClientHandler() {
     //    this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
@@ -28,7 +28,7 @@ public class NettyRpcClientHandler extends SimpleChannelInboundHandler<MyRpcResp
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MyRpcResponse msg) throws Exception {
         try {
-            unprocessedRequests.complete(msg);
+            futuresHolder.complete(msg);
             log.info("接收响应 [{}]", msg.getRequestId());
         } finally {
             ReferenceCountUtil.release(msg);

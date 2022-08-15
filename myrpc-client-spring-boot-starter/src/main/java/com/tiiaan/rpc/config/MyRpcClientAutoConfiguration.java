@@ -7,7 +7,7 @@ import com.tiiaan.rpc.client.MyRpcClient;
 import com.tiiaan.rpc.client.netty.ChannelProvider;
 import com.tiiaan.rpc.client.netty.NettyRpcClient;
 import com.tiiaan.rpc.client.netty.NettyRpcClientHandler;
-import com.tiiaan.rpc.client.netty.UnprocessedRequests;
+import com.tiiaan.rpc.client.netty.FuturesHolder;
 import com.tiiaan.rpc.registry.MyRpcServiceDiscovery;
 import com.tiiaan.rpc.registry.nacos.NacosServiceDiscovery;
 import lombok.extern.slf4j.Slf4j;
@@ -49,10 +49,10 @@ public class MyRpcClientAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnMissingBean(UnprocessedRequests.class)
-    public UnprocessedRequests unprocessedRequests() {
+    @ConditionalOnMissingBean(FuturesHolder.class)
+    public FuturesHolder unprocessedRequests() {
         log.info("...unprocessedRequests");
-        return new UnprocessedRequests();
+        return new FuturesHolder();
     }
 
 
@@ -65,7 +65,7 @@ public class MyRpcClientAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean(UnprocessedRequests.class)
+    @ConditionalOnBean(FuturesHolder.class)
     @ConditionalOnMissingBean(NettyRpcClientHandler.class)
     public NettyRpcClientHandler nettyRpcClientHandler() {
         log.info("...nettyRpcClientHandler");
@@ -74,7 +74,7 @@ public class MyRpcClientAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean({MyRpcServiceDiscovery.class, UnprocessedRequests.class, ChannelProvider.class})
+    @ConditionalOnBean({MyRpcServiceDiscovery.class, FuturesHolder.class, ChannelProvider.class})
     @ConditionalOnMissingBean(MyRpcClient.class)
     public MyRpcClient myRpcClient() {
         log.info("...myRpcClient");

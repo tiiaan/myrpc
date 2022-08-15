@@ -37,7 +37,7 @@ public class NettyRpcClient implements MyRpcClient {
     @Resource
     private MyRpcServiceDiscovery myRpcServiceDiscovery;
     @Resource
-    private UnprocessedRequests unprocessedRequests;
+    private FuturesHolder futuresHolder;
     @Resource
     private ChannelProvider channelProvider;
 
@@ -93,7 +93,7 @@ public class NettyRpcClient implements MyRpcClient {
         }
         CompletableFuture<MyRpcResponse<Object>> completableFuture = new CompletableFuture<>();
         if (channel.isActive()) {
-            unprocessedRequests.put(myRpcRequest.getRequestId(), completableFuture);
+            futuresHolder.put(myRpcRequest.getRequestId(), completableFuture);
             channel.writeAndFlush(myRpcRequest).addListener((ChannelFutureListener) channelFuture -> {
                 if(channelFuture.isSuccess()) {
                     log.info("发送请求 [{}]", myRpcRequest.getRequestId());

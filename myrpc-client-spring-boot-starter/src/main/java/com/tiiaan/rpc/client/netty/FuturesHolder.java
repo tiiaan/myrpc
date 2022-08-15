@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * description
  */
 
-public class UnprocessedRequests {
+public class FuturesHolder {
 
     private static final Map<String, CompletableFuture<MyRpcResponse<Object>>> FUTURES = new ConcurrentHashMap<>();
 
